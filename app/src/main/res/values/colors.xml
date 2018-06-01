@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="qian_gray">#E0E0E0</color>
+    <color name="shen_gray">#8E8E8E</color>
+    <color name="qian_white">#faf8f8</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="title_text">#403e3e</color>
+    <color name="qian_red">#ff5940</color>
+</resources>

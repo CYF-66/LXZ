@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">LXZ</string>
+
+    <string name="app_home">首页</string>
+    <string name="app_order">订单</string>
+    <string name="app_my">我的</string>
+    //下拉刷新下拉加载
+    <string name="refreshing">正在刷新...</string>
+    <string name="drop_down_refresh">下拉刷新...</string>
+    <string name="release_immediately_refresh">释放立即刷新</string>
+    <string name="refresh_end">刷新完成</string>
+</resources>
