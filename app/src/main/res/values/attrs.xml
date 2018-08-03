@@ -42,4 +42,22 @@
         <attr name="load_more_complete_to_default_scrolling_duration" format="integer" />
         <attr name="default_to_loading_more_scrolling_duration" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="StepView">
+        <attr name="svCircleColor" format="color"/>
+        <attr name="svTextColor" format="color"/>
+        <attr name="svSelectedColor" format="color"/>
+        <attr name="svFillRadius" format="dimension"/>
+        <attr name="svStrokeWidth" format="dimension"/>
+        <attr name="svLineWidth" format="dimension"/>
+        <attr name="svTextSize" format="dimension"/>
+        <attr name="svDrawablePadding" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="LineBreakLayout">
+        <!--标签之间左右距离-->
+        <attr name="leftAndRightSpace" format="dimension" />
+        <!--标签行距-->
+        <attr name="rowSpace" format="dimension" />
+    </declare-styleable>
 </resources>

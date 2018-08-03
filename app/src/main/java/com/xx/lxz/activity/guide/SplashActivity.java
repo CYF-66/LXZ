@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Window;
-import android.view.WindowManager;
 
-import com.xx.lxz.MainActivity;
 import com.xx.lxz.R;
+import com.xx.lxz.activity.MainActivity;
 import com.xx.lxz.base.AppManager;
 import com.xx.lxz.base.BaseActivity;
 import com.xx.lxz.util.LogUtil;
@@ -35,11 +33,6 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppManager.getAppManager().addActivity(this);
-        // 标题
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        // 设置窗体状态
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.splash);
         activity = SplashActivity.this;
         shareUtil = SharedPreferencesUtil.getinstance(getApplicationContext());

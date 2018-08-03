@@ -3,19 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@color/white"
     tools:context=".activity.order.OrderActivity">
 
     <RelativeLayout
+        android:id="@+id/rl_content"
         android:layout_width="match_parent"
-        android:layout_height="240dp"
+        android:layout_height="200dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
+        android:scaleType="fitXY"
         android:background="@mipmap/order_bg"
         >
+        <ImageView
+            android:id="@+id/iv_state"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@mipmap/order_state_usual"
+            android:layout_alignParentRight="true"/>
         <TextView
             android:id="@+id/tv_zu"
             android:layout_width="wrap_content"
@@ -24,8 +32,9 @@
             android:layout_marginLeft="5dp"
             android:text="租"
             android:textColor="@color/white"
-            android:textSize="25sp"/>
+            android:textSize="18sp"/>
         <TextView
+            android:visibility="gone"
             android:id="@+id/tv_orderNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,17 +43,18 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:textSize="15sp"
-            android:text="订单号:11010056"/>
+            android:text="11010056"/>
+
         <TextView
             android:id="@+id/tv_phone_type"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="25dp"
-            android:layout_below="@+id/tv_zu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_zu"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="20dp"
+            android:text="i Phone X"
             android:textColor="@color/white"
-            android:textSize="25sp"
-            android:text="i Phone X"/>
+            android:textSize="15sp" />
         <TextView
             android:id="@+id/tv_1"
             android:layout_marginTop="10dp"
@@ -52,7 +62,7 @@
             android:layout_below="@+id/tv_phone_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textColor="@color/qian_white"
             android:text="租赁日期:"/>
         <TextView
@@ -62,7 +72,7 @@
             android:layout_alignBaseline="@+id/tv_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textColor="@color/qian_white"
             android:text="2018/05/30"/>
         <Button
@@ -76,9 +86,53 @@
             android:layout_alignParentRight="true"
             android:text="结清账单"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="15sp"
             />
+
         <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/ll_dec2"
+            android:layout_below="@+id/tv_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingTop="40dp">
+            <TextView
+                android:id="@+id/tv_reason"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="审核拒绝原因:"
+                android:textSize="15sp"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/white"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_state_desp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="由于你的征信信用过低,我司拒绝您的这次申请"
+                android:textSize="15sp"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/white"/>
+            <TextView
+                android:id="@+id/tv_pay_ime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_5"
+                android:padding="10dp"
+                android:text="立即支付"
+                android:textSize="15sp"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/blue"/>
+        </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_dec1"
+            android:visibility="visible"
             android:layout_below="@+id/tv_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -99,6 +153,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_bian1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -107,13 +162,14 @@
                         android:textSize="15sp" />
 
                     <TextView
+                        android:id="@+id/tv_current_rent_money"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="5dp"
                         android:text="550.00"
                         android:textColor="@color/white"
-                        android:textSize="20sp" />
+                        android:textSize="15sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -135,6 +191,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_bian2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -143,13 +200,14 @@
                         android:textSize="15sp" />
 
                     <TextView
+                        android:id="@+id/tv_out_off_days"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="5dp"
                         android:text="3"
                         android:textColor="@color/white"
-                        android:textSize="20sp" />
+                        android:textSize="15sp" />
                 </LinearLayout>
             </LinearLayout>
             <View
@@ -169,6 +227,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_bian3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -177,19 +236,21 @@
                         android:textSize="15sp" />
 
                     <TextView
+                        android:id="@+id/tv_out_off_fee"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="5dp"
                         android:text="24"
                         android:textColor="@color/white"
-                        android:textSize="20sp" />
+                        android:textSize="15sp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/ll_pay_record"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -198,7 +259,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="20dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:src="@mipmap/order_record"/>
@@ -209,14 +270,16 @@
             android:textColor="@color/title_text"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:text="租金缴纳记录"/>
         <ImageView
+            android:id="@+id/iv_arrow"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="10dp"
-            android:src="@mipmap/xiangxia"/>
+            android:background="@mipmap/arrow_down"
+            />
     </LinearLayout>
     <View
         android:layout_marginTop="3dp"

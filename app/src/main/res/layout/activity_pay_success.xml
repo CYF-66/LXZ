@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".activity.order.PaySuccessActivity">
+
+    <include
+        layout="@layout/layout_head" />
+
+    <ImageView
+        android:layout_marginTop="30dp"
+        android:layout_width="179dp"
+        android:layout_height="125dp"
+        android:scaleType="fitXY"
+        android:background="@mipmap/img_bg_success_pay"/>
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:background="@mipmap/img_bg_pay_rigt"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_marginLeft="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="#387ef1"
+                android:layout_gravity="center_vertical"
+                android:text="支付成功"/>
+            <TextView
+                android:id="@+id/tv_money"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#afafaf"
+                android:text="账单已结清,支付金额300.1元"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    <Button
+        android:layout_marginTop="20dp"
+        android:id="@+id/btn_complete"
+        android:layout_width="183dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bt_bg_50"
+        android:text="完成"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+</LinearLayout>

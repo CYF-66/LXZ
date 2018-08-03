@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    //标题栏颜色
+    <color name="colorTitle">#fff</color>
+    //状态栏颜色
+    <color name="colorStatue">#fff</color>
+    //控件默认录入区的颜色
+    <color name="colorAccent1">#FF634D</color>
+
+    <color name="bg_gray">#eef1f5</color>
+
+    <color name="content_color">#fff</color>
+
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
@@ -11,4 +22,26 @@
     <color name="black">#000000</color>
     <color name="title_text">#403e3e</color>
     <color name="qian_red">#ff5940</color>
+    <color name="cus_phone_color">#f17e32</color>
+    <color name="gray">#c2b9b9</color>
+    <color name="blue">#559ced</color>
+    <color name="low_blue">#75aff2</color>
+    <color name="line_gray">#d9dde1</color>
+    <color name="white_pressed">#ECECEC</color>
+    <color name="text_black">#3b4452</color>
+    <color name="red">#EA324E</color>
+    <color name="shen_red">#e60413</color>
+    <color name="purple">#580370</color>
+    <color name="province_line_border">#D0D0D0</color>
+    <color name="color_transparent">#00000000</color>
+    <color name="color_323232">#323232</color>
+    <color name="color_e84515">#e84515</color>
+    <color name="color_d8d8d8">#d8d8d8</color>
+    <color name="blueline">#50a4f0</color>
+    <color name="album_blue">#3399FF</color>
+    <color name="tv_blue">#308BE9</color>     //蓝色
+    <color name="divider_gray">#d9d9d9</color>//细分割线颜色
+    <color name="tv_gray">#666666</color>
+    <color name="bt_bg">#1E8AE5</color>
+
 </resources>

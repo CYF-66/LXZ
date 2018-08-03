@@ -15,7 +15,7 @@ import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 
-import com.xx.lxz.MainActivity;
+import com.xx.lxz.activity.MainActivity;
 import com.xx.lxz.R;
 import com.xx.lxz.adapter.GuidePageAdapter;
 import com.xx.lxz.base.AppManager;

@@ -2,18 +2,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/ll_no_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:visibility="gone"
+            android:orientation="vertical"
+            >
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@mipmap/no_order_data"
+                />
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/shen_gray"
+                android:textSize="18sp"
+                android:text="暂无订单哦"/>
+        </LinearLayout>
 
         <com.xx.lxz.widget.swipetoloadlayout.SuperRefreshRecyclerView
             android:id="@+id/super_recyclerview"
             android:layout_width="match_parent"
+            android:visibility="visible"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@color/white" />
     </LinearLayout>
+
 </FrameLayout>

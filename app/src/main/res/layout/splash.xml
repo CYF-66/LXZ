@@ -3,7 +3,11 @@
     android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/point1"
     android:orientation="vertical" >
-
+<ImageView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scaleType="fitXY"
+    android:background="@mipmap/ic_welcome"
+    />
 </RelativeLayout>

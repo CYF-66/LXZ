@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@color/white"
     tools:context=".activity.order.OrderActivity">
@@ -17,8 +17,9 @@
         >
         <ImageView
             android:id="@+id/iv_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:scaleType="fitXY"
             android:layout_centerVertical="true"
             android:src="@mipmap/order_qi"/>
         <TextView
@@ -29,8 +30,8 @@
             android:textColor="@color/title_text"
             android:layout_marginLeft="5dp"
             android:layout_centerVertical="true"
-            android:textSize="15sp"
-            android:text="1/2期"/>
+            android:textSize="12sp"
+            android:text="1/2"/>
         <ImageView
             android:id="@+id/iv_2"
             android:layout_toRightOf="@+id/tv_qi"
@@ -38,14 +39,15 @@
             android:layout_height="20dp"
             android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
-            android:src="@mipmap/right_arrow"/>
+            android:src="@mipmap/arrow_right"/>
         <TextView
+            android:id="@+id/tv_order_state"
             android:layout_marginRight="10dp"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:textColor="@color/qian_red"
             android:text="待还中"/>
     </RelativeLayout>
@@ -54,67 +56,84 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/qian_gray"></View>
-    <RelativeLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/qian_gray"
+        android:background="#F7F7F7"
+        android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp">
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
 
         <ImageView
+            android:layout_marginLeft="5dp"
             android:id="@+id/iv_phone_img"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:src="@mipmap/order_img"/>
+            android:scaleType="fitXY"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/order_img" />
+
         <LinearLayout
             android:id="@+id/ll_middle"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/iv_phone_img"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
             android:orientation="vertical">
+
             <TextView
+                android:visibility="gone"
+                android:id="@+id/tv_ti_msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="由于您逾期三天。本产品有租转售"
                 android:textColor="@color/title_text"
-                android:textSize="12sp"
-                android:text="由于您逾期三天。本产品有租转售"/>
+                android:singleLine="true"
+                android:textSize="12sp" />
+
             <TextView
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="您将在本期结清剩余所有费用"
                 android:textColor="@color/title_text"
-                android:textSize="12sp"
-                android:text="您将在本期结清剩余所有费用"/>
+                android:singleLine="true"
+                android:textSize="12sp" />
         </LinearLayout>
+
         <LinearLayout
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/ll_middle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tv_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="本期租金"
                 android:textColor="@color/shen_gray"
-                android:textSize="15sp"
-                android:text="本期租金"/>
+                android:textSize="12sp" />
+
             <TextView
-                android:layout_marginTop="5dp"
-                android:layout_below="@+id/tv_2"
-                android:layout_toRightOf="@+id/iv_phone_img"
+                android:id="@+id/tv_current_rent_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_2"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/iv_phone_img"
+                android:text="650.00"
                 android:textColor="@color/title_text"
-                android:textSize="20sp"
-                android:text="650.00"/>
+                android:textSize="14sp" />
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -128,26 +147,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textSize="15sp"
+            android:textSize="12sp"
+            android:layout_marginLeft="5dp"
             android:textColor="@color/title_text"
             android:text="应结算日:"/>
         <TextView
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@+id/tv_payoff_name"
             android:layout_centerVertical="true"
-            android:id="@+id/tv_payoff_value"
+            android:id="@+id/tv_payoff_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textColor="@color/title_text"
             android:text="2018/03/05"/>
         <Button
+            android:id="@+id/tv_pay"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:background="@mipmap/order_payoff"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:text="结清"/>
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:text="还款"/>
     </RelativeLayout>
     <View
         android:layout_marginTop="3dp"

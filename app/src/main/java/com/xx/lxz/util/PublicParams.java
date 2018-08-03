@@ -6,9 +6,6 @@ import android.content.SharedPreferences.Editor;
 
 import com.xx.lxz.config.GlobalConfig;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 公共类
  * 
@@ -20,10 +17,10 @@ public class PublicParams {
 	private static final long serialVersionUID = 1L;
 	static SharedPreferences sharedPreferences;
 	static Editor editor;
-//	public static boolean isloging=false;//是否登录
-	public static List<String> statuslist=new ArrayList<>();
 	public static Context context;
-
+	public static boolean isHomeRead=false;
+	public static String channelId="";
+	public static String orderType="";//订单类型 0 已完成 1 待还  2 审核
 
 
 	public static void InitSharedPreferences(Context context2) {

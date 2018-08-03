@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
-
+//apply plugin: 'android-apt'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.1'
     defaultConfig {
         applicationId "com.xx.lxz"
-        minSdkVersion 15
-        targetSdkVersion 26
+        minSdkVersion 17
+        targetSdkVersion 27
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -17,6 +17,20 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    packagingOptions {
+        exclude('META-INF/LICENSE')
+        exclude('META-INF/NOTICE')
+        exclude('META-INF/DEPENDENCIES')
+    }
+    sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/anim'] } }
+    useLibrary 'org.apache.http.legacy'
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
     }
 }
 
@@ -28,11 +42,36 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
     //butterknife
-    implementation 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
-    implementation 'com.android.support:appcompat-v7:26.+'
-    implementation 'com.android.support:design:26.0.0-alpha1'
-    implementation 'com.android.support:recyclerview-v7:26.0.0-alpha1'
+    implementation 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    implementation 'com.android.support:appcompat-v7:27.0.1'
+    implementation 'com.android.support:design:27.0.1'
+    implementation 'com.android.support:recyclerview-v7:27.0.1'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.25'
+    implementation 'com.google.android:flexbox:0.2.6'
+    //事件
+    implementation files('libs/androideventbus-1.0.2.jar')
+    implementation files('libs/commons-io-1.4.jar')
+    implementation files('libs/commons-lang3-3.1.jar')
+    implementation files('libs/gson-2.3.1.jar')
+    implementation files('libs/httpcore-4.3.1.jar')
+    implementation files('libs/httpmime-4.3.1.jar')
+    implementation files('libs/universal-image-loader-1.5.6-with-src.jar')
+    implementation 'de.hdodenhof:circleimageview:2.0.0'
+    //白骑士
+    implementation files('libs/tbs_sdk_thirdapp_v3.5.0.jar')
+    implementation(name: 'bqs-crawler-cloud-sdk-2.2.6', ext: 'aar')
+    //支付
+    implementation files('libs/alipaySdk-20161009.jar')
+    //    implementation files('libs/android-support-v13.jar')
+    //百度推送
+    implementation files('libs/galaxy.jar')
+    implementation files('libs/pushservice-6.1.1.21.jar')
+    implementation files('libs/ufosdk-android-1.7.13.jar')
+    //百度统计
+    //    implementation files('com.baidu.mobstat:mtj-sdk:latest.integration')
+    //    compile 'com.baidu.mobstat:mtj-sdk:latest.integration'
+    implementation files('libs/Baidu_Mtj_3.9.0.7.jar')
+    implementation files('libs/xUtils-2.6.13.jar')
 }

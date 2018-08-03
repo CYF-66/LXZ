@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <solid android:color="@color/bt_bg" />
+    <!--
+  设置圆角
+  注意：	bottomRightRadius是左下角而不是右下角  bottomLeftRadius右下角
+    -->
+    <corners
+        android:bottomLeftRadius="30dp"
+        android:bottomRightRadius="30dp"
+        android:topLeftRadius="30dp"
+        android:topRightRadius="30dp" />
+
+</shape>

@@ -1,27 +1,33 @@
 package com.xx.lxz.activity.order;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.xx.lxz.R;
+import com.xx.lxz.activity.my.CusSerActivity;
 import com.xx.lxz.adapter.OrderViewPagerAdapter;
 import com.xx.lxz.base.BaseActivity;
 import com.xx.lxz.base.BaseFragment;
+import com.xx.lxz.bean.RefreshtEvent;
 import com.xx.lxz.config.GlobalConfig;
 import com.xx.lxz.fragment.CheckOrderFragment;
 import com.xx.lxz.fragment.CompleteOrderFragment;
 import com.xx.lxz.fragment.ToBePayOrderFragment;
-import com.xx.lxz.util.StatusBarUtil;
+import com.xx.lxz.util.LogUtil;
 import com.xx.lxz.util.StringUtil;
 
+import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OrderActivity extends BaseActivity implements TabLayout.OnTabSelectedListener, View.OnClickListener{
+public class OrderActivity extends BaseActivity implements TabLayout.OnTabSelectedListener{
 
     @BindView(R.id.tab_layout)
     TabLayout tab_layout;
@@ -29,6 +35,8 @@ public class OrderActivity extends BaseActivity implements TabLayout.OnTabSelect
     ViewPager view_pager;
     @BindView(R.id.ll_top)
     LinearLayout ll_top;
+    @BindView(R.id.iv_kefu)
+    ImageView iv_kefu;
 
     public static OrderActivity activity;
     private BaseFragment[] fragmentsOrder;
@@ -43,11 +51,17 @@ public class OrderActivity extends BaseActivity implements TabLayout.OnTabSelect
         activity=OrderActivity.this;
         //订单
         setTab();
+        iv_kefu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(activity, CusSerActivity.class));
+            }
+        });
     }
 
     private void setTab() {
-        View topView = StatusBarUtil.createTranslucentStatusBarView(this, getResources().getColor(R.color.white));
-        ll_top.addView(topView);
+//        View topView = StatusBarUtil.createTranslucentStatusBarView(this, getResources().getColor(R.color.white));
+//        ll_top.addView(topView);
 
         //设置TabLayout标签的显示方式
         tab_layout.setTabMode(TabLayout.MODE_FIXED);
@@ -69,7 +83,7 @@ public class OrderActivity extends BaseActivity implements TabLayout.OnTabSelect
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-
+        LogUtil.d("TEST", "tab position:" + tab.getPosition());
     }
 
     @Override
@@ -83,13 +97,39 @@ public class OrderActivity extends BaseActivity implements TabLayout.OnTabSelect
     }
 
     @Override
-    public void onClick(View v) {
-
-    }
-
-    @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);// 反注册EventBus
+    }
+
+    /**
+     * 接收消息
+     * @param event
+     */
+    @Subscriber
+    public void onEventMainThread(RefreshtEvent event) {
+
+        if(event.getMrefreshPosition()!=null){
+            if(event.getMrefreshPosition().getActive().equals(GlobalConfig.ACTIVE_SKIPTO)){
+                if(event.getMrefreshPosition().getPosition().equals(GlobalConfig.REFRESHPOSITIO_ORDER_PAY)){
+                    view_pager.setCurrentItem(1);
+//                    dataAddr.getData().remove(event.getMrefreshPosition().getDataPosition());
+//                    adapter.notifyDataSetChanged();
+                }else if(event.getMrefreshPosition().getPosition().equals(GlobalConfig.REFRESHPOSITIO_ORDER_CHECK)){
+                    view_pager.setCurrentItem(2);
+                }
+            }
+        }
+    }
 }

@@ -1,21 +1,15 @@
 package com.xx.lxz.base;
 
 import android.app.Activity;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.xx.lxz.activity.order.OrderActivity;
 import com.xx.lxz.util.LogUtil;
 import com.xx.lxz.util.SharedPreferencesUtil;
-
-import java.util.Locale;
 
 import butterknife.ButterKnife;
 
@@ -44,7 +38,7 @@ public abstract class BaseFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        mContext = TradeContainerActivity.tradeContainerActivity;
-        mContext = OrderActivity.activity;
+        mContext = getActivity();
     }
 
 

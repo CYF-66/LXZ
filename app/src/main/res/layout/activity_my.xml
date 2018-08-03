@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/qian_gray"
+    android:background="#F7F7F7"
     android:orientation="vertical"
     tools:context=".activity.my.MyActivity">
 
@@ -22,6 +22,7 @@
         android:paddingRight="10dp">
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -30,8 +31,10 @@
             android:textSize="20sp" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/iv_set"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:scaleType="fitXY"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@mipmap/my_set" />
@@ -47,20 +50,22 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/rl_login"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
-                android:background="@mipmap/my_bg">
+                android:background="@mipmap/my_bg"
+                android:visibility="gone">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/iv_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20dp"
-                    android:src="@mipmap/logo_login" />
+                    android:background="@mipmap/logo_login" />
 
                 <TextView
                     android:id="@+id/tv_phone"
@@ -84,6 +89,47 @@
                     android:textColor="@color/white"
                     android:textSize="15sp" />
             </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rl_unlogin"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:visibility="visible"
+                android:background="@mipmap/my_bg">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                <TextView
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/tv_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="请先登录"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:padding="10dp"
+                    android:paddingBottom="10dp"
+                    android:background="@drawable/shape_bg_stroke_login_blue"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_login"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="乐享租,年轻人的信用租机"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+                </LinearLayout>
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -94,6 +140,7 @@
                 android:padding="10dp">
 
                 <LinearLayout
+                    android:id="@+id/ll_prepare_check"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -116,10 +163,10 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/right_arrow" />
+                        android:src="@mipmap/arrow_right" />
                 </LinearLayout>
-
                 <LinearLayout
+                    android:id="@+id/ll_prepare_payoff"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -143,10 +190,11 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/right_arrow" />
+                        android:src="@mipmap/arrow_right" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_payoff_record"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -170,10 +218,11 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/right_arrow" />
+                        android:src="@mipmap/arrow_right" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_identify_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -197,10 +246,11 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/right_arrow" />
+                        android:src="@mipmap/arrow_right" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_msg_center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -224,7 +274,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/right_arrow" />
+                        android:src="@mipmap/arrow_right" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -237,6 +287,7 @@
                 android:padding="10dp">
 
                 <LinearLayout
+                    android:id="@+id/ll_cus_help"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -259,10 +310,11 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/right_arrow" />
+                        android:src="@mipmap/arrow_right" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_set"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -279,14 +331,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1"
-                        android:text="客服帮助"
+                        android:text="设置"
                         android:textColor="@color/title_text"
                         android:textSize="15sp" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/right_arrow" />
+                        android:src="@mipmap/arrow_right" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
