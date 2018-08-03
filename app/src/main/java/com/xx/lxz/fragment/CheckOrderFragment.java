@@ -22,6 +22,7 @@ import com.xx.lxz.api.HttpConstant;
 import com.xx.lxz.api.HttpService;
 import com.xx.lxz.api.MessageCode;
 import com.xx.lxz.base.BaseFragment;
+import com.xx.lxz.bean.AlipayResult;
 import com.xx.lxz.bean.Order;
 import com.xx.lxz.bean.OrderDTO;
 import com.xx.lxz.bean.RefreshtEvent;
@@ -205,8 +206,13 @@ public class CheckOrderFragment extends BaseFragment implements OnRefreshListene
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
 //                        Toast.makeText(mContext, "支付成功", Toast.LENGTH_SHORT).show();
+                        String Result=payResult.getResult();
+                        AlipayResult alipayResult=new Gson().fromJson(Result,
+                                AlipayResult.class);
+                        String total_amount=alipayResult.getAlipay_trade_app_pay_response().getTotal_amount();
                         Intent intent=new Intent(mContext, PaySuccessActivity.class);
                         intent.putExtra("comeFromPosition","2");
+                        intent.putExtra("total_amount",total_amount);
                         startActivity(intent);
 //                        getBookList();
 

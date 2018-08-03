@@ -17,6 +17,8 @@ import com.xx.lxz.api.HttpService;
 import com.xx.lxz.base.BaseFragment;
 import com.xx.lxz.bean.Order;
 import com.xx.lxz.bean.OrderDTO;
+import com.xx.lxz.bean.RefreshtEvent;
+import com.xx.lxz.config.GlobalConfig;
 import com.xx.lxz.util.NetUtil;
 import com.xx.lxz.util.PublicParams;
 import com.xx.lxz.util.ToastUtil;
@@ -27,6 +29,8 @@ import com.xx.lxz.widget.swipetoloadlayout.SuperRefreshRecyclerView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -179,6 +183,34 @@ public class ToBePayOrderFragment extends BaseFragment implements OnRefreshListe
             }
         }
     };
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);// 反注册EventBus
+    }
+
+    /**
+     * 接收消息
+     * @param event
+     */
+    @Subscriber
+    public void onEventMainThread(RefreshtEvent event) {
+
+        if(event.getMrefreshPosition()!=null){
+            if(event.getMrefreshPosition().getActive().equals(GlobalConfig.ACTIVE_REFRESH)){
+                if(event.getMrefreshPosition().getPosition().equals(GlobalConfig.REFRESHPOSITIO_ORDER_PAY)){
+                    getBookList();
+                }
+            }
+        }
+    }
 
     private void onLoad() {
         refreshRecyclerView.setRefreshing(false);

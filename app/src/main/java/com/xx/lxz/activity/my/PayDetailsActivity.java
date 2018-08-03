@@ -14,12 +14,14 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.xx.lxz.R;
+import com.xx.lxz.activity.order.PaySuccessActivity;
 import com.xx.lxz.alipay.PayMent;
 import com.xx.lxz.alipay.PayResult;
 import com.xx.lxz.api.HttpConstant;
 import com.xx.lxz.api.HttpService;
 import com.xx.lxz.api.MessageCode;
 import com.xx.lxz.base.BaseActivity;
+import com.xx.lxz.bean.AlipayResult;
 import com.xx.lxz.bean.BillDetails;
 import com.xx.lxz.util.NetUtil;
 import com.xx.lxz.util.StatusBarUtil;
@@ -179,7 +181,16 @@ public class PayDetailsActivity extends BaseActivity {
                     // 判断resultStatus 为9000则代表支付成功
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                        Toast.makeText(mActivity, "支付成功", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(mActivity, "支付成功", Toast.LENGTH_SHORT).show();
+                        String Result=payResult.getResult();
+                        AlipayResult alipayResult=new Gson().fromJson(Result,
+                                AlipayResult.class);
+                        String total_amount=alipayResult.getAlipay_trade_app_pay_response().getTotal_amount();
+                        Intent intent=new Intent(mActivity, PaySuccessActivity.class);
+                        intent.putExtra("comeFromPosition","1");
+                        intent.putExtra("total_amount",total_amount);
+                        startActivity(intent);
+                        finish();
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         Toast.makeText(mActivity, "支付失败", Toast.LENGTH_SHORT).show();

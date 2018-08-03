@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:textColor="#afafaf"
-                android:text="账单已结清,支付金额300.1元"/>
+                android:text=""/>
         </LinearLayout>
 
     </LinearLayout>

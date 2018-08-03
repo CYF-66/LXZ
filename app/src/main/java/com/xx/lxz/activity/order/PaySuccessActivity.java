@@ -35,6 +35,7 @@ public class PaySuccessActivity extends BaseActivity {
 
     private Activity mActivity;
     private String comeFromPosition;
+    private String total_amount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,8 @@ public class PaySuccessActivity extends BaseActivity {
         mActivity=PaySuccessActivity.this;
         tv_title.setText("分期还款");
         comeFromPosition=getIntent().getStringExtra("comeFromPosition");
+        total_amount=getIntent().getStringExtra("total_amount");
+        tv_money.setText("账单已结清,支付金额"+total_amount+"元");
     }
 
     @OnClick({R.id.iv_back,R.id.btn_complete})
