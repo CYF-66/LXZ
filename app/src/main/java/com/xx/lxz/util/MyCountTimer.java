@@ -60,7 +60,7 @@ public class MyCountTimer {
 	}
 
 	public void onFinish() {
-//		btn.setText("验证码");
+		btn.setText("获取");
 		btn.setTextColor(Color.parseColor("#ffffff"));
 		btn.setEnabled(true);
 	}

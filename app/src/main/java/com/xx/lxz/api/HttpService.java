@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.xx.lxz.activity.my.LoginActivity;
+import com.xx.lxz.bean.RefreshModel;
+import com.xx.lxz.bean.RefreshtEvent;
+import com.xx.lxz.config.GlobalConfig;
 import com.xx.lxz.util.LogUtil;
 import com.xx.lxz.util.SharedPreferencesUtil;
 
@@ -27,12 +30,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
+import org.simple.eventbus.EventBus;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,6 +79,8 @@ public class HttpService {
 
         // 获得https请求 httpclient
         httpClient = new DefaultHttpClient();
+        httpClient.getParams().setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 20000);
+        httpClient.getParams().setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 20000);
 
         HttpPost httpPost = new HttpPost(url);
         httpPost.addHeader("token", token);
@@ -103,6 +110,11 @@ public class HttpService {
                     try{
                         JSONObject jsonObject=new JSONObject(result);
                         if(jsonObject.optInt("code")==2){
+                            shareUtil.setString("phone", "");
+                            shareUtil.setString("cid","");
+                            shareUtil.setString("token", "");
+                            shareUtil.setBoolean("IsLogin",false);
+                            shareUtil.setString("phone","");
                             Intent intent=new Intent(context, LoginActivity.class);
                             context.startActivity(intent);
                             return null;
@@ -112,16 +124,47 @@ public class HttpService {
                     }catch (Exception e){
                         e.getMessage();
                     }
-
                 }
+            }else{
+                RefreshModel refreshMode = new RefreshModel();
+                refreshMode.setActive(GlobalConfig.ACTIVE_SHOW_EXCEPTION);
+                refreshMode.setPosition(GlobalConfig.REFRESHPOSITIO_SHOW_ALL);
+                refreshMode.setMsg("网络异常"+requestCode);
+                EventBus.getDefault().post(
+                        new RefreshtEvent(refreshMode));
             }
         } catch (ClientProtocolException e) {
+            e.getMessage();
+            RefreshModel refreshMode = new RefreshModel();
+            refreshMode.setActive(GlobalConfig.ACTIVE_SHOW_EXCEPTION);
+            refreshMode.setPosition(GlobalConfig.REFRESHPOSITIO_SHOW_ALL);
+            refreshMode.setMsg(e.getMessage());
+            EventBus.getDefault().post(
+                    new RefreshtEvent(refreshMode));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+            RefreshModel refreshMode = new RefreshModel();
+            refreshMode.setActive(GlobalConfig.ACTIVE_SHOW_EXCEPTION);
+            refreshMode.setPosition(GlobalConfig.REFRESHPOSITIO_SHOW_ALL);
+            refreshMode.setMsg(e.getMessage());
+            EventBus.getDefault().post(
+                    new RefreshtEvent(refreshMode));
         } catch (ConnectTimeoutException e) {//连接超时
             e.printStackTrace();
+            RefreshModel refreshMode = new RefreshModel();
+            refreshMode.setActive(GlobalConfig.ACTIVE_SHOW_EXCEPTION);
+            refreshMode.setPosition(GlobalConfig.REFRESHPOSITIO_SHOW_ALL);
+            refreshMode.setMsg(e.getMessage());
+            EventBus.getDefault().post(
+                    new RefreshtEvent(refreshMode));
         } catch (IOException e) {
             e.printStackTrace();
+            RefreshModel refreshMode = new RefreshModel();
+            refreshMode.setActive(GlobalConfig.ACTIVE_SHOW_EXCEPTION);
+            refreshMode.setPosition(GlobalConfig.REFRESHPOSITIO_SHOW_ALL);
+            refreshMode.setMsg(e.getMessage());
+            EventBus.getDefault().post(
+                    new RefreshtEvent(refreshMode));
         } finally {
             // 关闭连接，释放资源
             httpClient.getConnectionManager().shutdown();
@@ -139,7 +182,6 @@ public class HttpService {
      */
     public final static String httpClientUpload(Context context, String url, File postFile) {
 
-        try {
             SharedPreferencesUtil shareUtil = SharedPreferencesUtil.getinstance(context);
             String token = shareUtil.getString("token");
             url = HttpConstant.IPAddress + url;
@@ -147,25 +189,27 @@ public class HttpService {
             HttpClient httpClient = null;
             // 获得https请求 httpclient
             httpClient = new DefaultHttpClient();
-            httpClient.getParams().setIntParameter("http.socket.timeout", 10000);
+            httpClient.getParams().setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 20000);
+            httpClient.getParams().setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 20000);
 
             HttpPost httpPost = new HttpPost(url);
             httpPost.addHeader("token", token);
 
-            //把文件转换成流对象FileBody
-            FileBody fundFileBin = new FileBody(postFile);
-
-            MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder
-                    .create();
-            multipartEntityBuilder.addPart("headimg", fundFileBin);//相当于<input type="file" name="media"/>
-            HttpEntity reqEntity = multipartEntityBuilder.build();
-            httpPost.setEntity(reqEntity);
-
-            HttpResponse response = httpClient.execute(httpPost);
-            int requestCode = response.getStatusLine().getStatusCode();
-            LogUtil.d("TEST", "url=" + url);
-            LogUtil.d("TEST", "requestCode=" + requestCode);
             try {
+                //把文件转换成流对象FileBody
+                FileBody fundFileBin = new FileBody(postFile);
+
+                MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder
+                        .create();
+                multipartEntityBuilder.addPart("headimg", fundFileBin);//相当于<input type="file" name="media"/>
+                HttpEntity reqEntity = multipartEntityBuilder.build();
+                httpPost.setEntity(reqEntity);
+
+                HttpResponse response = httpClient.execute(httpPost);
+                int requestCode = response.getStatusLine().getStatusCode();
+                LogUtil.d("TEST", "url=" + url);
+                LogUtil.d("TEST", "requestCode=" + requestCode);
+
                 if (requestCode == 200) {
 //                resultString = EntityUtils.toString(response.getEntity(), CHARSET_UTF_8);
                     HttpEntity httpEntity = response.getEntity();
@@ -175,6 +219,11 @@ public class HttpService {
                         try{
                             JSONObject jsonObject=new JSONObject(result);
                             if(jsonObject.optInt("code")==2){
+                                shareUtil.setString("phone", "");
+                                shareUtil.setString("cid","");
+                                shareUtil.setString("token", "");
+                                shareUtil.setBoolean("IsLogin",false);
+                                shareUtil.setString("phone","");
                                 Intent intent=new Intent(context, LoginActivity.class);
                                 context.startActivity(intent);
                                 return null;
@@ -185,14 +234,50 @@ public class HttpService {
                             e.getMessage();
                         }
                     }
+                }else{
+                    RefreshModel refreshMode = new RefreshModel();
+                    refreshMode.setActive(GlobalConfig.ACTIVE_SHOW_EXCEPTION);
+                    refreshMode.setPosition(GlobalConfig.REFRESHPOSITIO_SHOW_ALL);
+                    refreshMode.setMsg("网络异常"+requestCode);
+                    EventBus.getDefault().post(
+                            new RefreshtEvent(refreshMode));
                 }
-            } finally {
+            } catch (ClientProtocolException e) {
+                e.getMessage();
+                RefreshModel refreshMode = new RefreshModel();
+                refreshMode.setActive(GlobalConfig.ACTIVE_SHOW_EXCEPTION);
+                refreshMode.setPosition(GlobalConfig.REFRESHPOSITIO_SHOW_ALL);
+                refreshMode.setMsg(e.getMessage());
+                EventBus.getDefault().post(
+                        new RefreshtEvent(refreshMode));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                RefreshModel refreshMode = new RefreshModel();
+                refreshMode.setActive(GlobalConfig.ACTIVE_SHOW_EXCEPTION);
+                refreshMode.setPosition(GlobalConfig.REFRESHPOSITIO_SHOW_ALL);
+                refreshMode.setMsg(e.getMessage());
+                EventBus.getDefault().post(
+                        new RefreshtEvent(refreshMode));
+            } catch (ConnectTimeoutException e) {//连接超时
+                e.printStackTrace();
+                RefreshModel refreshMode = new RefreshModel();
+                refreshMode.setActive(GlobalConfig.ACTIVE_SHOW_EXCEPTION);
+                refreshMode.setPosition(GlobalConfig.REFRESHPOSITIO_SHOW_ALL);
+                refreshMode.setMsg(e.getMessage());
+                EventBus.getDefault().post(
+                        new RefreshtEvent(refreshMode));
+            } catch (IOException e) {
+                e.printStackTrace();
+                RefreshModel refreshMode = new RefreshModel();
+                refreshMode.setActive(GlobalConfig.ACTIVE_SHOW_EXCEPTION);
+                refreshMode.setPosition(GlobalConfig.REFRESHPOSITIO_SHOW_ALL);
+                refreshMode.setMsg(e.getMessage());
+                EventBus.getDefault().post(
+                        new RefreshtEvent(refreshMode));
+            }finally {
                 httpClient.getConnectionManager().shutdown();
             }
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-        }
+
         return null;
     }
 
@@ -206,7 +291,6 @@ public class HttpService {
      */
     public final static String httpClientUploadFile(Context context, String url, Map<String ,Object> fileList) {
 
-        try {
             SharedPreferencesUtil shareUtil = SharedPreferencesUtil.getinstance(context);
             String token = shareUtil.getString("token");
             url = HttpConstant.IPAddress + url;
@@ -214,13 +298,14 @@ public class HttpService {
             HttpClient httpClient = null;
             // 获得https请求 httpclient
             httpClient = getNewHttpClient(context);
-            httpClient.getParams().setIntParameter("http.socket.timeout", 10000);
+            httpClient.getParams().setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 20000);
+            httpClient.getParams().setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 20000);
 
             HttpPost httpPost = new HttpPost(url);
 //            httpPost.addHeader(HTTP.CONTENT_TYPE, "multipart/form-data");
             httpPost.addHeader("token", token);
 
-
+        try {
             MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder
                     .create();
             for (Map.Entry<String, Object> entry : fileList.entrySet()) {
@@ -239,9 +324,7 @@ public class HttpService {
 
             HttpEntity reqEntity = multipartEntityBuilder.build();
             httpPost.setEntity(reqEntity);
-
-            try {
-                HttpResponse response = httpClient.execute(httpPost);
+            HttpResponse response = httpClient.execute(httpPost);
                 int requestCode = response.getStatusLine().getStatusCode();
                 LogUtil.d("TEST", "url=" + url);
                 LogUtil.d("TEST", "requestCode=" + requestCode);
@@ -273,21 +356,46 @@ public class HttpService {
 
                 } else {
                 }
-            } catch (ClientProtocolException e){
+            } catch (ClientProtocolException e) {
                 e.getMessage();
+                RefreshModel refreshMode = new RefreshModel();
+                refreshMode.setActive(GlobalConfig.ACTIVE_SHOW_EXCEPTION);
+                refreshMode.setPosition(GlobalConfig.REFRESHPOSITIO_SHOW_ALL);
+                refreshMode.setMsg(e.getMessage());
+                EventBus.getDefault().post(
+                        new RefreshtEvent(refreshMode));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                RefreshModel refreshMode = new RefreshModel();
+                refreshMode.setActive(GlobalConfig.ACTIVE_SHOW_EXCEPTION);
+                refreshMode.setPosition(GlobalConfig.REFRESHPOSITIO_SHOW_ALL);
+                refreshMode.setMsg(e.getMessage());
+                EventBus.getDefault().post(
+                        new RefreshtEvent(refreshMode));
+            } catch (ConnectTimeoutException e) {//连接超时
+                e.printStackTrace();
+                RefreshModel refreshMode = new RefreshModel();
+                refreshMode.setActive(GlobalConfig.ACTIVE_SHOW_EXCEPTION);
+                refreshMode.setPosition(GlobalConfig.REFRESHPOSITIO_SHOW_ALL);
+                refreshMode.setMsg(e.getMessage());
+                EventBus.getDefault().post(
+                        new RefreshtEvent(refreshMode));
+            } catch (IOException e) {
+                e.printStackTrace();
+                RefreshModel refreshMode = new RefreshModel();
+                refreshMode.setActive(GlobalConfig.ACTIVE_SHOW_EXCEPTION);
+                refreshMode.setPosition(GlobalConfig.REFRESHPOSITIO_SHOW_ALL);
+                refreshMode.setMsg(e.getMessage());
+                EventBus.getDefault().post(
+                        new RefreshtEvent(refreshMode));
             }finally {
                 httpClient.getConnectionManager().shutdown();
             }
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return null;
     }
 
-    private static final int SET_CONNECTION_TIMEOUT = 10 * 1000;
-    private static final int SET_SOCKET_TIMEOUT = 10 * 1000;
+    private static final int SET_CONNECTION_TIMEOUT = 20 * 1000;
+    private static final int SET_SOCKET_TIMEOUT = 20 * 1000;
 
     /**
      * 创建HttpClient

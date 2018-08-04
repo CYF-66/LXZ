@@ -88,6 +88,14 @@ public class OrderAdapter extends RecyclerView.Adapter {
             ((ContentViewHolder) holder).tv_orderNum.setText("订单号:"+mContent.get(position).getContentDates().getBid());
 
             String outOfRate=mContent.get(position).getContentDates().getExpectday();
+            String bookType=mContent.get(position).getContentDates().getBook_type();
+            if(TextUtils.isEmpty(bookType)){
+                ((ContentViewHolder) holder).tv_zu.setText("租");
+            }else if(bookType.equals("1")){
+                    ((ContentViewHolder) holder).tv_zu.setText("售");
+            }else{
+                ((ContentViewHolder) holder).tv_zu.setText("租");
+            }
             if(TextUtils.isEmpty(outOfRate)){
                 outOfRate="0";
             }
@@ -343,6 +351,7 @@ public class OrderAdapter extends RecyclerView.Adapter {
         public TextView tv_bian2;//
         public TextView tv_bian3;//
         public TextView tv_reason;//
+        public TextView tv_zu;//标识
         public TextView tv_state_desp;//审核订单描述
         public TextView tv_pay_ime;//立即支付
         public Button btn_payoff;//结清账单
@@ -365,6 +374,7 @@ public class OrderAdapter extends RecyclerView.Adapter {
             tv_bian3 = (TextView)itemView.findViewById(R.id.tv_bian3);
             tv_pay_ime = (TextView)itemView.findViewById(R.id.tv_pay_ime);
             tv_reason = (TextView)itemView.findViewById(R.id.tv_reason);
+            tv_zu = (TextView)itemView.findViewById(R.id.tv_zu);
             tv_state_desp = (TextView)itemView.findViewById(R.id.tv_state_desp);
             btn_payoff = (Button)itemView.findViewById(R.id.btn_payoff);
             ll_pay_record = (LinearLayout)itemView.findViewById(R.id.ll_pay_record);

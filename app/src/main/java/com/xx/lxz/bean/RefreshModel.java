@@ -12,6 +12,16 @@ public class RefreshModel implements Serializable{
 
     private String id;//id
 
+    private String msg;//msg
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
     public String getId() {
         return id;
     }

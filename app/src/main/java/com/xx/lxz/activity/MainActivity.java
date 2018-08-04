@@ -270,6 +270,11 @@ public class MainActivity extends TabActivity{
 //                    dataAddr.getData().remove(event.getMrefreshPosition().getDataPosition());
 //                    adapter.notifyDataSetChanged();
                 }
+            }else if(event.getMrefreshPosition().getActive().equals(GlobalConfig.ACTIVE_SHOW_EXCEPTION)){
+                if(event.getMrefreshPosition().getPosition().equals(GlobalConfig.REFRESHPOSITIO_SHOW_ALL)){
+                    String msg=event.getMrefreshPosition().getMsg();
+                    ToastUtil.ToastShort(mainActivity,msg);
+                }
             }
         }
     }

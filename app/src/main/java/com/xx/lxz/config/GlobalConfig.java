@@ -76,10 +76,12 @@ public class GlobalConfig {
     public final static String REFRESHPOSITIO_MSG = "msg";
     public final static String REFRESHPOSITIO_ORDER_PAY = "order_pay";//待还
     public final static String REFRESHPOSITIO_ORDER_CHECK = "order_check";//审核
+    public final static String REFRESHPOSITIO_SHOW_ALL = "all";//审核
     //行为
     public final static String ACTIVE_REFRESH = "refresh";//刷新
     public final static String ACTIVE_SKIPTO = "skip";//跳转
     public final static String ACTIVE_PAY = "pay";//z支付
+    public final static String ACTIVE_SHOW_EXCEPTION = "exception";//异常信息
 
 
 }

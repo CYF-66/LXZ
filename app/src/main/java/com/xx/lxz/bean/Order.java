@@ -203,7 +203,7 @@ public class Order implements Serializable{
         public class OrderMode implements Serializable{
 
             private String bid;
-            private String book_type;//产品名称
+            private String book_type;//
             private String product_name;//产品名称
             private String product_rate;//产品比率
             private String product_price;//产品总价值

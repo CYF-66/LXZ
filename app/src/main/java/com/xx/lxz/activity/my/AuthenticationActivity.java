@@ -90,6 +90,8 @@ public class AuthenticationActivity extends BaseActivity {
             case R.id.ll_identify_info://身份信息
                 localCurrentStep=1;
                 getIdenAuthInfo();
+//                intent=new Intent(mActivity,IdentifyActivity.class);
+//                startActivity(intent);
                 break;
             case R.id.ll_per_info://个人信息
                 localCurrentStep=2;

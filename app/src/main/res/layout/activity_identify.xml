@@ -120,7 +120,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/white"
-                    android:numeric="integer"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:gravity="right"
