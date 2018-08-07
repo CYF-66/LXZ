@@ -33,6 +33,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.xx.lxz.App;
+import com.xx.lxz.BuildConfig;
 import com.xx.lxz.R;
 import com.xx.lxz.activity.MainActivity;
 import com.xx.lxz.activity.my.set.SetActivity;
@@ -121,8 +122,8 @@ public class MyActivity extends BaseActivity {
     private static final int CODE_RESULT_REQUEST = 0xa2;
     private static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;
     private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
-    private File fileUri = new File(Environment.getExternalStorageDirectory().getPath() + "/photo.jpg");
-    private File fileCropUri = new File(Environment.getExternalStorageDirectory().getPath() + "/crop_photo.jpg");
+    private File fileUri = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getPath() + "/photo.jpg");
+    private File fileCropUri = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getPath() + "/crop_photo.jpg");
     private Uri imageUri;
     private Uri cropImageUri;
     private static final int OUTPUT_X = 480;
@@ -234,13 +235,15 @@ public class MyActivity extends BaseActivity {
                 }
                 break;
             case R.id.ll_msg_center://消息中心
-                if (!shareUtil.getBoolean("IsLogin")) {
-                    intent=new Intent(mActivity, LoginActivity.class);
-                    startActivity(intent);
-                }else{
-                    intent=new Intent(mActivity, MessageActivity.class);
-                    startActivity(intent);
-                }
+//                if (!shareUtil.getBoolean("IsLogin")) {
+//                    intent=new Intent(mActivity, LoginActivity.class);
+//                    startActivity(intent);
+//                }else{
+//                    intent=new Intent(mActivity, MessageActivity.class);
+//                    startActivity(intent);
+//                }
+                intent=new Intent(mActivity, MessageActivity.class);
+                startActivity(intent);
                 break;
             case R.id.ll_cus_help://客服帮助
                 intent=new Intent(mActivity, CusSerActivity.class);
@@ -331,6 +334,7 @@ public class MyActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         /** attention to this below ,must add this**/
+
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 //拍照完成回调
@@ -344,7 +348,7 @@ public class MyActivity extends BaseActivity {
                         cropImageUri = Uri.fromFile(fileCropUri);
                         Uri newUri = Uri.parse(PhotoUtils.getPath(this, data.getData()));
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            newUri = FileProvider.getUriForFile(mActivity, "com.xx.lxz.fileprovider", new File(newUri.getPath()));
+                            newUri = FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID+".fileprovider", new File(newUri.getPath()));
                         }
                         PhotoUtils.cropImageUri(mActivity, newUri, cropImageUri, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
                     } else {
@@ -354,10 +358,10 @@ public class MyActivity extends BaseActivity {
                 case CODE_RESULT_REQUEST:
                     Bitmap bitmap = PhotoUtils.getBitmapFromUri(cropImageUri, mActivity);
                     saveCusHeadImg(fileCropUri);
-                    if (bitmap != null) {
-                        iv_icon.setImageBitmap(bitmap);
-                        shareUtil.setString("UserIcon", cropImageUri.getPath());
-                    }
+//                    if (bitmap != null) {
+//                        iv_icon.setImageBitmap(bitmap);
+//                        shareUtil.setString("UserIcon", cropImageUri.getPath());
+//                    }
                     break;
                 default:
             }
@@ -418,6 +422,7 @@ public class MyActivity extends BaseActivity {
                     if(baseResult.getCode()==1){
                         //保存头像地址
                         shareUtil.setString("UserIcon",baseResult.getData());
+                        imageLoader.displayImage(baseResult.getData(), iv_icon, options);// 设置图片
                     }
                     break;
             }
@@ -440,7 +445,7 @@ public class MyActivity extends BaseActivity {
                     if (hasSdcard()) {
                         imageUri = Uri.fromFile(fileUri);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            imageUri = FileProvider.getUriForFile(this, "com.xx.lxz.fileprovider", fileUri);//通过FileProvider创建一个content类型的Uri
+                            imageUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri);//通过FileProvider创建一个content类型的Uri
                         }
                         PhotoUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
                     } else {
@@ -501,7 +506,7 @@ public class MyActivity extends BaseActivity {
             if (hasSdcard()) {
                 imageUri = Uri.fromFile(fileUri);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-                    imageUri = FileProvider.getUriForFile(this, "com.xx.lxz.fileprovider", fileUri);//通过FileProvider创建一个content类型的Uri
+                    imageUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri);//通过FileProvider创建一个content类型的Uri
                 }
                 PhotoUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
             } else {
@@ -529,7 +534,7 @@ public class MyActivity extends BaseActivity {
                 if(UserIcon.contains("http")){
                     imageLoader.displayImage(UserIcon, iv_icon, options);// 设置图片
                 }else{
-                    imageLoader.displayImage("file://" + UserIcon, iv_icon, options);// 设置图片
+                    imageLoader.displayImage("file:///" + UserIcon, iv_icon, options);// 设置图片
                 }
             }
 

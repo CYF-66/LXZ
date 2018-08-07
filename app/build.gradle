@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 apply plugin: 'com.android.application'
 //apply plugin: 'android-apt'
 
@@ -8,14 +10,25 @@ android {
         applicationId "com.xx.lxz"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 1
-        versionName "1.0.1"
+        versionCode 102
+        versionName "1.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            if (outputFileName.endsWith('.apk')) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
+                Calendar lastDate = Calendar.getInstance();
+                String str = sdf.format(lastDate.getTime());
+                outputFileName = "xxz_${variant.buildType.name}_${str}.apk".toLowerCase()
+            }
         }
     }
 

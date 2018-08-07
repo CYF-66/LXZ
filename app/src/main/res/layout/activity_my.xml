@@ -124,7 +124,7 @@
                     android:layout_below="@+id/tv_login"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="乐享租,年轻人的信用租机"
+                    android:text="笑享租,年轻人的信用租机"
                     android:textColor="@color/white"
                     android:textSize="15sp" />
                 </LinearLayout>

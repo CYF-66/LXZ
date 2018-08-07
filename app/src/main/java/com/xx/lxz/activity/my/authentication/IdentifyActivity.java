@@ -32,6 +32,7 @@ import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.xx.lxz.App;
+import com.xx.lxz.BuildConfig;
 import com.xx.lxz.R;
 import com.xx.lxz.activity.MainActivity;
 import com.xx.lxz.api.HttpConstant;
@@ -103,12 +104,12 @@ public class IdentifyActivity extends BaseActivity {
     private static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;
     private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
 
-    private File fileUri1 = new File(Environment.getExternalStorageDirectory().getPath() + "/front_photo.jpg");
-    private File fileCropUri1 = new File(Environment.getExternalStorageDirectory().getPath() + "/front_crop_photo.jpg");
-    private File fileUri2 = new File(Environment.getExternalStorageDirectory().getPath() + "/back_photo.jpg");
-    private File fileCropUri2 = new File(Environment.getExternalStorageDirectory().getPath() + "/back_crop_photo.jpg");
-    private File fileUri3 = new File(Environment.getExternalStorageDirectory().getPath() + "/icon_photo.jpg");
-    private File fileCropUri3 = new File(Environment.getExternalStorageDirectory().getPath() + "/icon_crop_photo.jpg");
+    private File fileUri1 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/front_photo.jpg");
+    private File fileCropUri1 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/front_crop_photo.jpg");
+    private File fileUri2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+ "/back_photo.jpg");
+    private File fileCropUri2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/back_crop_photo.jpg");
+    private File fileUri3 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/icon_photo.jpg");
+    private File fileCropUri3 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/icon_crop_photo.jpg");
 
     private Uri imageUri1;
     private Uri cropImageUri1;
@@ -381,7 +382,7 @@ public class IdentifyActivity extends BaseActivity {
                             cropImageUri1 = Uri.fromFile(fileCropUri1);
                             Uri newUri = Uri.parse(PhotoUtils.getPath(this, data.getData()));
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                newUri = FileProvider.getUriForFile(mActivity, "com.xx.lxz.fileprovider", new File(newUri.getPath()));
+                                newUri = FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID+".fileprovider", new File(newUri.getPath()));
                             }
                             PhotoUtils.cropImageUri(mActivity, newUri, cropImageUri1, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
 
@@ -389,14 +390,14 @@ public class IdentifyActivity extends BaseActivity {
                             cropImageUri2 = Uri.fromFile(fileCropUri2);
                             Uri newUri = Uri.parse(PhotoUtils.getPath(this, data.getData()));
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                newUri = FileProvider.getUriForFile(mActivity, "com.xx.lxz.fileprovider", new File(newUri.getPath()));
+                                newUri = FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID+".fileprovider", new File(newUri.getPath()));
                             }
                             PhotoUtils.cropImageUri(mActivity, newUri, cropImageUri2, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
                         }else{
                             cropImageUri3 = Uri.fromFile(fileCropUri3);
                             Uri newUri = Uri.parse(PhotoUtils.getPath(this, data.getData()));
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                newUri = FileProvider.getUriForFile(mActivity, "com.xx.lxz.fileprovider", new File(newUri.getPath()));
+                                newUri = FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID+".fileprovider", new File(newUri.getPath()));
                             }
                             PhotoUtils.cropImageUri(mActivity, newUri, cropImageUri3, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
                         }
@@ -529,20 +530,20 @@ public class IdentifyActivity extends BaseActivity {
 
                             imageUri1 = Uri.fromFile(fileUri1);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                imageUri1 = FileProvider.getUriForFile(this, "com.xx.lxz.fileprovider", fileUri1);//通过FileProvider创建一个content类型的Uri
+                                imageUri1 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri1);//通过FileProvider创建一个content类型的Uri
                             }
                             PhotoUtils.takePicture(this, imageUri1, CODE_CAMERA_REQUEST);
 
                         }else if(fromFlag.equals("2")){
                             imageUri2 = Uri.fromFile(fileUri2);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                imageUri2 = FileProvider.getUriForFile(this, "com.xx.lxz.fileprovider", fileUri2);//通过FileProvider创建一个content类型的Uri
+                                imageUri2 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri2);//通过FileProvider创建一个content类型的Uri
                             }
                             PhotoUtils.takePicture(this, imageUri2, CODE_CAMERA_REQUEST);
                         }else{
                             imageUri3 = Uri.fromFile(fileUri3);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                imageUri3 = FileProvider.getUriForFile(this, "com.xx.lxz.fileprovider", fileUri3);//通过FileProvider创建一个content类型的Uri
+                                imageUri3 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri3);//通过FileProvider创建一个content类型的Uri
                             }
                             PhotoUtils.takePicture(this, imageUri3, CODE_CAMERA_REQUEST);
                         }
@@ -556,19 +557,19 @@ public class IdentifyActivity extends BaseActivity {
                         if(fromFlag.equals("1")){
                             imageUri1 = Uri.fromFile(fileUri1);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                imageUri1 = FileProvider.getUriForFile(this, "com.xx.lxz.fileprovider", fileUri1);//通过FileProvider创建一个content类型的Uri
+                                imageUri1 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri1);//通过FileProvider创建一个content类型的Uri
                             }
                             PhotoUtils.takePicture(this, imageUri1, CODE_CAMERA_REQUEST);
                         }else if(fromFlag.equals("2")){
                             imageUri2 = Uri.fromFile(fileUri2);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                imageUri2 = FileProvider.getUriForFile(this, "com.xx.lxz.fileprovider", fileUri2);//通过FileProvider创建一个content类型的Uri
+                                imageUri2 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri2);//通过FileProvider创建一个content类型的Uri
                             }
                             PhotoUtils.takePicture(this, imageUri2, CODE_CAMERA_REQUEST);
                         }else{
                             imageUri3 = Uri.fromFile(fileUri3);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                imageUri3 = FileProvider.getUriForFile(this, "com.xx.lxz.fileprovider", fileUri3);//通过FileProvider创建一个content类型的Uri
+                                imageUri3 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri3);//通过FileProvider创建一个content类型的Uri
                             }
                             PhotoUtils.takePicture(this, imageUri3, CODE_CAMERA_REQUEST);
                         }
@@ -632,19 +633,19 @@ public class IdentifyActivity extends BaseActivity {
                 if(fromFlag.equals("1")){
                     imageUri1 = Uri.fromFile(fileUri1);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        imageUri1 = FileProvider.getUriForFile(this, "com.xx.lxz.fileprovider", fileUri1);//通过FileProvider创建一个content类型的Uri
+                        imageUri1 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri1);//通过FileProvider创建一个content类型的Uri
                     }
                     PhotoUtils.takePicture(this, imageUri1, CODE_CAMERA_REQUEST);
                 }else if(fromFlag.equals("2")){
                     imageUri2 = Uri.fromFile(fileUri2);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        imageUri2 = FileProvider.getUriForFile(this, "com.xx.lxz.fileprovider", fileUri2);//通过FileProvider创建一个content类型的Uri
+                        imageUri2 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri2);//通过FileProvider创建一个content类型的Uri
                     }
                     PhotoUtils.takePicture(this, imageUri2, CODE_CAMERA_REQUEST);
                 }else{
                     imageUri3 = Uri.fromFile(fileUri3);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        imageUri3 = FileProvider.getUriForFile(this, "com.xx.lxz.fileprovider", fileUri3);//通过FileProvider创建一个content类型的Uri
+                        imageUri3 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri3);//通过FileProvider创建一个content类型的Uri
                     }
                     PhotoUtils.takePicture(this, imageUri3, CODE_CAMERA_REQUEST);
                 }

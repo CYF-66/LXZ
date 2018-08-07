@@ -35,6 +35,7 @@ import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.xx.lxz.App;
+import com.xx.lxz.BuildConfig;
 import com.xx.lxz.R;
 import com.xx.lxz.activity.MainActivity;
 import com.xx.lxz.api.HttpConstant;
@@ -147,8 +148,8 @@ public class PersonInfoActivity extends BaseActivity {
     private static final int CODE_VEDIO_REQUEST = 0xa3;
     private static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;
     private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
-    private File fileUri = new File(Environment.getExternalStorageDirectory().getPath() + "/photo.jpg");
-    private File fileCropUri = new File(Environment.getExternalStorageDirectory().getPath() + "/crop_photo.jpg");
+    private File fileUri = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/photo.jpg");
+    private File fileCropUri = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/crop_photo.jpg");
     private Uri imageUri;
     private Uri cropImageUri;
     private static final int OUTPUT_X = 480;
@@ -575,7 +576,7 @@ public class PersonInfoActivity extends BaseActivity {
                         cropImageUri = Uri.fromFile(fileCropUri);
                         Uri newUri = Uri.parse(PhotoUtils.getPath(this, data.getData()));
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            newUri = FileProvider.getUriForFile(mActivity, "com.xx.lxz.fileprovider", new File(newUri.getPath()));
+                            newUri = FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID+".fileprovider", new File(newUri.getPath()));
                         }
                         PhotoUtils.cropImageUri(mActivity, newUri, cropImageUri, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
                     } else {
@@ -641,7 +642,7 @@ public class PersonInfoActivity extends BaseActivity {
                     if (hasSdcard()) {
                         imageUri = Uri.fromFile(fileUri);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            imageUri = FileProvider.getUriForFile(this, "com.xx.lxz.fileprovider", fileUri);//通过FileProvider创建一个content类型的Uri
+                            imageUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri);//通过FileProvider创建一个content类型的Uri
                         }
                         PhotoUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
                     } else {
@@ -703,7 +704,7 @@ public class PersonInfoActivity extends BaseActivity {
             if (hasSdcard()) {
                 imageUri = Uri.fromFile(fileUri);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-                    imageUri = FileProvider.getUriForFile(this, "com.xx.lxz.fileprovider", fileUri);//通过FileProvider创建一个content类型的Uri
+                    imageUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri);//通过FileProvider创建一个content类型的Uri
                 }
                 PhotoUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
             } else {

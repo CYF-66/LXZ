@@ -1,20 +1,28 @@
 package com.xx.lxz.fragment;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.xx.lxz.R;
+import com.xx.lxz.activity.order.PaySuccessActivity;
 import com.xx.lxz.adapter.OrderAdapter;
+import com.xx.lxz.alipay.PayMent;
+import com.xx.lxz.alipay.PayResult;
 import com.xx.lxz.api.HttpConstant;
 import com.xx.lxz.api.HttpService;
+import com.xx.lxz.api.MessageCode;
 import com.xx.lxz.base.BaseFragment;
+import com.xx.lxz.bean.AlipayResult;
 import com.xx.lxz.bean.Order;
 import com.xx.lxz.bean.OrderDTO;
 import com.xx.lxz.bean.RefreshtEvent;
@@ -34,6 +42,7 @@ import org.simple.eventbus.Subscriber;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -137,15 +146,16 @@ public class ToBePayOrderFragment extends BaseFragment implements OnRefreshListe
 
         @Override
         public void handleMessage(Message msg) {
-            String result = (String) msg.obj;
-            customProgressDialog.dismiss();
-            if (result == null || result == "") {
-//                ToastUtil.ToastShort(mActivity, "token验证失败,请重新登录");
-                return;
-            }
 
             switch (msg.what) {
                 case GETPAYORDERLIST:
+                    String result = (String) msg.obj;
+                    customProgressDialog.dismiss();
+                    if (result == null || result == "") {
+//                ToastUtil.ToastShort(mActivity, "token验证失败,请重新登录");
+                        return;
+                    }
+
                     Order order = new Gson().fromJson(result,
                             Order.class);
 
@@ -180,6 +190,33 @@ public class ToBePayOrderFragment extends BaseFragment implements OnRefreshListe
                         refreshRecyclerView.setVisibility(View.GONE);
                     }
                     break;
+                case MessageCode.PAYRORDERESULT:
+
+                    PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+                    /**
+                     对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+                     */
+                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                    String resultStatus = payResult.getResultStatus();
+                    // 判断resultStatus 为9000则代表支付成功
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+//                        Toast.makeText(mContext, "支付成功", Toast.LENGTH_SHORT).show();
+                        String Result=payResult.getResult();
+                        AlipayResult alipayResult=new Gson().fromJson(Result,
+                                AlipayResult.class);
+                        String total_amount=alipayResult.getAlipay_trade_app_pay_response().getTotal_amount();
+                        Intent intent=new Intent(mContext, PaySuccessActivity.class);
+                        intent.putExtra("comeFromPosition","1");
+                        intent.putExtra("total_amount",total_amount);
+                        startActivity(intent);
+//                        getBookList();
+
+                    } else {
+                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                        Toast.makeText(mContext, "支付失败", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
             }
         }
     };
@@ -207,6 +244,14 @@ public class ToBePayOrderFragment extends BaseFragment implements OnRefreshListe
             if(event.getMrefreshPosition().getActive().equals(GlobalConfig.ACTIVE_REFRESH)){
                 if(event.getMrefreshPosition().getPosition().equals(GlobalConfig.REFRESHPOSITIO_ORDER_PAY)){
                     getBookList();
+                }
+            }
+            if(event.getMrefreshPosition().getActive().equals(GlobalConfig.ACTIVE_PAY)){
+                if(event.getMrefreshPosition().getPosition().equals(GlobalConfig.REFRESHPOSITIO_ORDER_PAY)){
+                    String bid=String.valueOf(event.getMrefreshPosition().getDataPosition());
+
+                    PayMent payMent=new PayMent(mContext,handler);
+                    payMent.requestPayInfo(bid,"");
                 }
             }
         }

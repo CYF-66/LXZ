@@ -184,7 +184,22 @@ public class OrderAdapter extends RecyclerView.Adapter {
                     refreshMode.setDataPosition(Integer.parseInt(bid));
                     EventBus.getDefault().post(
                             new RefreshtEvent(refreshMode));
+//                    Intent intent=new Intent(context, PayDetailsActivity.class);
+//                    context.startActivity(intent);
 
+                }
+            });
+            ((ContentViewHolder) holder).btn_payoff.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = (int) view.getTag();
+                    String bid=mContent.get(position).getContentDates().getBid();
+                    RefreshModel refreshMode = new RefreshModel();
+                    refreshMode.setActive(GlobalConfig.ACTIVE_PAY);
+                    refreshMode.setPosition(GlobalConfig.REFRESHPOSITIO_ORDER_PAY);
+                    refreshMode.setDataPosition(Integer.parseInt(bid));
+                    EventBus.getDefault().post(
+                            new RefreshtEvent(refreshMode));
 //                    Intent intent=new Intent(context, PayDetailsActivity.class);
 //                    context.startActivity(intent);
 
