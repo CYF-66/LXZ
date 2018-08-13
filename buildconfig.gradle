@@ -1,0 +1,27 @@
+ext {
+    def dependVersion = [
+            googleSupportVersion:"26.1.0",
+            glide    : "4.4.0",
+            butterknife:"8.4.0",
+            baseRecyclerViewAdapterHelper:"2.9.25",
+            flexbox:"0.2.6",
+            constraint_layout:"1.1.0",
+    ]
+
+    dependencies = [
+            support_v7   : "com.android.support:appcompat-v7:${dependVersion.googleSupportVersion}",
+            support_v4   : "com.android.support:support-v4:${dependVersion.googleSupportVersion}",
+            recyclerview : "com.android.support:recyclerview-v7:${dependVersion.googleSupportVersion}",
+            glide        : "com.github.bumptech.glide:glide:${dependVersion.glide}",
+            glidecompiler: "com.github.bumptech.glide:compiler:${dependVersion.glide}",
+            annotations  : "com.android.support:support-annotations:${dependVersion.googleSupportVersion}",
+            exifinterface: "com.android.support:exifinterface:${dependVersion.googleSupportVersion}",
+            butterknife:"com.jakewharton:butterknife:${dependVersion.butterknife}",
+            butterknife_compiler:"com.jakewharton:butterknife-compiler:${dependVersion.butterknife}",
+            design:"com.android.support:design:${dependVersion.googleSupportVersion}",
+            recyclerview:"com.android.support:recyclerview-v7:${dependVersion.googleSupportVersion}",
+            baseRecyclerViewAdapterHelper:"com.github.CymChad:BaseRecyclerViewAdapterHelper:${dependVersion.baseRecyclerViewAdapterHelper}",
+            flexbox:"com.google.android:flexbox:${dependVersion.flexbox}",
+            constraint_layout:"com.android.support.constraint:constraint-layout:${dependVersion.constraint_layout}",
+    ]
+}

@@ -21,6 +21,7 @@ import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
 import com.baidu.mobstat.StatService;
 import com.xx.lxz.App;
+import com.xx.lxz.BuildConfig;
 import com.xx.lxz.R;
 import com.xx.lxz.activity.home.HomeActivity;
 import com.xx.lxz.activity.my.LoginActivity;
@@ -108,7 +109,7 @@ public class MainActivity extends TabActivity{
 //            ToastUtil.ToastShort(mainActivity,"请允许权限进行下载安装");
         } else {//已拥有权限
             // 这里来检测版本是否需要更新
-            String versionName=NetUtil.getVersionName(this);
+            String versionName= BuildConfig.VERSION_NAME;
             mUpdateManager = new UpdateManager(
                     MainActivity.this, versionName);
             mUpdateManager.checkUpdateInfo();
@@ -154,7 +155,7 @@ public class MainActivity extends TabActivity{
     }
 
     /**
-     * 性别和关系选择框
+     * 提醒登录
      */
     private void showDialog() {
 

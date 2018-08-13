@@ -44,6 +44,8 @@ import com.xx.lxz.widget.itemdecoration.GridLayoutDecoration;
 import com.xx.lxz.widget.swipetoloadlayout.OnLoadMoreListener;
 import com.xx.lxz.widget.swipetoloadlayout.OnRefreshListener;
 
+import net.arvin.selector.utils.PSGlideUtil;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -251,7 +253,7 @@ public class ProductDetailsActivity extends BaseActivity implements OnRefreshLis
 
                         if(productDetails.getData()!=null&&!productDetails.getData().equals("")){
                             tv_phone_name.setText(productDetails.getData().getProduct_name());
-                            HomeActivity.imageLoader.displayImage(productDetails.getData().getProduct_detimg(), iv_img_url, HomeActivity.options);// 设置图片
+                            PSGlideUtil.loadImage(mActivity, productDetails.getData().getProduct_detimg(), iv_img_url);
 
                             if(productDetails.getData().getProdPrices()!=null&&productDetails.getData().getProdPrices().size()>0){
 

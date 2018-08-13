@@ -4,18 +4,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -32,12 +24,8 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.xx.lxz.App;
-import com.xx.lxz.BuildConfig;
 import com.xx.lxz.R;
-import com.xx.lxz.activity.MainActivity;
 import com.xx.lxz.api.HttpConstant;
 import com.xx.lxz.api.HttpService;
 import com.xx.lxz.api.MessageCode;
@@ -57,6 +45,10 @@ import com.xx.lxz.widget.CustomDialog;
 import com.xx.lxz.widget.CustomProgressDialog;
 import com.xx.lxz.widget.StepView;
 import com.xx.lxz.widget.itemdecoration.LinearLayoutDecoration;
+
+import net.arvin.selector.SelectorHelper;
+import net.arvin.selector.data.ConstantData;
+import net.arvin.selector.utils.PSGlideUtil;
 
 import org.json.JSONObject;
 
@@ -142,24 +134,13 @@ public class PersonInfoActivity extends BaseActivity {
     private String path;
 
     //拍照或相册
-    private static final int CODE_GALLERY_REQUEST = 0xa0;
-    private static final int CODE_CAMERA_REQUEST = 0xa1;
-    private static final int CODE_RESULT_REQUEST = 0xa2;
     private static final int CODE_VEDIO_REQUEST = 0xa3;
-    private static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;
-    private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
-    private File fileUri = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/photo.jpg");
-    private File fileCropUri = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/crop_photo.jpg");
-    private Uri imageUri;
-    private Uri cropImageUri;
-    private static final int OUTPUT_X = 480;
-    private static final int OUTPUT_Y = 480;
+    private File fileCropUri;
     private File vedio;
 
-    private ImageLoader imageLoader = null;
-    private DisplayImageOptions options = null;
     private SharedPreferencesUtil shareUtil;
     private boolean isEdit=true;
+    private ArrayList<String> selectedPictures = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,8 +156,8 @@ public class PersonInfoActivity extends BaseActivity {
         tv_bian1.setText("入校时间");
         tv_bian2.setText("所属院校");
         tv_bian3.setText("学生证编号");
-        iv_yes.setBackground(getResources().getDrawable(R.mipmap.tab_seclect));
-        iv_no.setBackground(getResources().getDrawable(R.mipmap.tab_unseclect));
+        PSGlideUtil.loadImage(mActivity, R.mipmap.tab_seclect, iv_yes);
+        PSGlideUtil.loadImage(mActivity, R.mipmap.tab_unseclect, iv_no);
         rl_idcard_front.setVisibility(View.GONE);
 //        List<String> steps = Arrays.asList(new String[]{"身份认证","信息认证","","","",""});
         List<StepMode> stepModes = new ArrayList<>();
@@ -223,8 +204,8 @@ public class PersonInfoActivity extends BaseActivity {
             case R.id.iv_yes://
                 if(isEdit){
                     isStudent = true;
-                    iv_yes.setBackground(getResources().getDrawable(R.mipmap.tab_seclect));
-                    iv_no.setBackground(getResources().getDrawable(R.mipmap.tab_unseclect));
+                    PSGlideUtil.loadImage(mActivity, R.mipmap.tab_seclect, iv_yes);
+                    PSGlideUtil.loadImage(mActivity, R.mipmap.tab_unseclect, iv_no);
                     rl_idcard_front.setVisibility(View.GONE);
                     iv_work_pic.setVisibility(View.GONE);
                     tv_bian1.setText("入校时间");
@@ -238,8 +219,8 @@ public class PersonInfoActivity extends BaseActivity {
             case R.id.iv_no://返回
                 if(isEdit){
                     isStudent = false;
-                    iv_yes.setBackground(getResources().getDrawable(R.mipmap.tab_unseclect));
-                    iv_no.setBackground(getResources().getDrawable(R.mipmap.tab_seclect));
+                    PSGlideUtil.loadImage(mActivity, R.mipmap.tab_unseclect, iv_yes);
+                    PSGlideUtil.loadImage(mActivity, R.mipmap.tab_seclect, iv_no);
                     rl_idcard_front.setVisibility(View.VISIBLE);
                     iv_work_pic.setVisibility(View.VISIBLE);
                     tv_bian1.setText("公司地址");
@@ -533,9 +514,9 @@ public class PersonInfoActivity extends BaseActivity {
                 adapter.notifyDataSetChanged();
 
                 if(dates.get(position).getText().equals("拍照")){
-                    autoObtainCameraPermission();
+                    takePhoto();
                 }else{
-                    autoObtainStoragePermission();
+                    selectPicture();
                 }
                 mDialog.dismiss();
             }
@@ -553,6 +534,25 @@ public class PersonInfoActivity extends BaseActivity {
         mDialog.show();
     }
 
+    private void selectPicture() {
+        checkPermission(new CheckPermListener() {
+            @Override
+            public void agreeAllPermission() {
+                SelectorHelper.selectPicture(mActivity, true,
+                        true, 1001);
+            }
+        }, "需要拍照和读取文件权限", Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
+
+    private void takePhoto() {
+        checkPermission(new CheckPermListener() {
+            @Override
+            public void agreeAllPermission() {
+                SelectorHelper.takePhoto(mActivity, true, 1001);
+            }
+        }, "需要拍照和读取文件权限", Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
+
     /**
      * 拍照或从相册获取回调
      * @param requestCode
@@ -565,34 +565,6 @@ public class PersonInfoActivity extends BaseActivity {
         /** attention to this below ,must add this**/
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                //拍照完成回调
-                case CODE_CAMERA_REQUEST:
-                    cropImageUri = Uri.fromFile(fileCropUri);
-                    PhotoUtils.cropImageUri(mActivity, imageUri, cropImageUri, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
-                    break;
-                //访问相册完成回调
-                case CODE_GALLERY_REQUEST:
-                    if (hasSdcard()) {
-                        cropImageUri = Uri.fromFile(fileCropUri);
-                        Uri newUri = Uri.parse(PhotoUtils.getPath(this, data.getData()));
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            newUri = FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID+".fileprovider", new File(newUri.getPath()));
-                        }
-                        PhotoUtils.cropImageUri(mActivity, newUri, cropImageUri, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
-                    } else {
-                        ToastUtil.ToastShort(mActivity, "设备没有SD卡！");
-                    }
-                    break;
-                case CODE_RESULT_REQUEST:
-                    Bitmap bitmap = PhotoUtils.getBitmapFromUri(cropImageUri, mActivity);
-//                    saveCusHeadImg(fileCropUri);
-                    if (bitmap != null) {
-                        rl_idcard_front.setVisibility(View.GONE);
-                        iv_work_pic.setVisibility(View.VISIBLE);
-                        iv_work_pic.setImageBitmap(bitmap);
-//                        shareUtil.setString("UserIcon", cropImageUri.getPath());
-                    }
-                    break;
                 case CODE_VEDIO_REQUEST:
                     try {
                         path=PhotoUtils.getPath(this, data.getData());
@@ -621,98 +593,23 @@ public class PersonInfoActivity extends BaseActivity {
                     } catch (OutOfMemoryError e) {
                     }
                     break;
+                case 1001:
+                    ArrayList<String> backPics = data.getStringArrayListExtra(ConstantData.KEY_BACK_PICTURES);
+                    if (backPics != null && backPics.size() > 0) {
+                        selectedPictures.clear();
+                        selectedPictures.addAll(backPics);
+                        rl_idcard_front.setVisibility(View.GONE);
+                        iv_work_pic.setVisibility(View.VISIBLE);
+                        PSGlideUtil.loadImage(mActivity, backPics.get(0), iv_work_pic);
+//                        saveCusHeadImg(new File(backPics.get(0)));
+                        fileCropUri=new File(backPics.get(0));
+                    }
+                    break;
                 default:
                     break;
             }
         }
     }
-
-    /**
-     * 申请权限回调
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case CAMERA_PERMISSIONS_REQUEST_CODE:
-//                dialog.dismiss();
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (hasSdcard()) {
-                        imageUri = Uri.fromFile(fileUri);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            imageUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri);//通过FileProvider创建一个content类型的Uri
-                        }
-                        PhotoUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
-                    } else {
-                        ToastUtil.ToastShort(this, "设备没有SD卡！");
-                    }
-                } else {
-                    ToastUtil.ToastShort(this, "请允许打开相机！！");
-                }
-                break;
-            case STORAGE_PERMISSIONS_REQUEST_CODE:
-//                dialog.dismiss();
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    PhotoUtils.openPic(this, CODE_GALLERY_REQUEST);
-                } else {
-                    ToastUtil.ToastShort(this, "请允许打操作SDCard！！");
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-
-    /**
-     * 自动获取sdk权限
-     */
-    private void autoObtainStoragePermission() {
-        mDialog.dismiss();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.mainActivity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSIONS_REQUEST_CODE);
-        } else {
-            PhotoUtils.openPic(this, CODE_GALLERY_REQUEST);
-        }
-
-    }
-
-    /**
-     * 检查设备是否存在SDCard的工具方法
-     */
-    public static boolean hasSdcard() {
-        String state = Environment.getExternalStorageState();
-        return state.equals(Environment.MEDIA_MOUNTED);
-    }
-
-    /**
-     * 自动获取相机权限
-     */
-    private void autoObtainCameraPermission() {
-
-        mDialog.dismiss();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-                ToastUtil.ToastShort(this, "您已经拒绝过一次");
-            }
-            ActivityCompat.requestPermissions(MainActivity.mainActivity, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, CAMERA_PERMISSIONS_REQUEST_CODE);
-        } else {//有权限直接调用系统相机拍照
-            if (hasSdcard()) {
-                imageUri = Uri.fromFile(fileUri);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-                    imageUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri);//通过FileProvider创建一个content类型的Uri
-                }
-                PhotoUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
-            } else {
-                ToastUtil.ToastShort(this, "设备没有SD卡！");
-            }
-        }
-    }
-
 
     /**
      * 选择出生年月

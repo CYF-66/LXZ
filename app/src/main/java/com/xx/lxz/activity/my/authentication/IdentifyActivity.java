@@ -4,21 +4,12 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -29,12 +20,8 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.xx.lxz.App;
-import com.xx.lxz.BuildConfig;
 import com.xx.lxz.R;
-import com.xx.lxz.activity.MainActivity;
 import com.xx.lxz.api.HttpConstant;
 import com.xx.lxz.api.HttpService;
 import com.xx.lxz.api.MessageCode;
@@ -43,7 +30,6 @@ import com.xx.lxz.bean.Common;
 import com.xx.lxz.bean.StepMode;
 import com.xx.lxz.bean.TargetEntity;
 import com.xx.lxz.util.NetUtil;
-import com.xx.lxz.util.PhotoUtils;
 import com.xx.lxz.util.SharedPreferencesUtil;
 import com.xx.lxz.util.SizeUtils;
 import com.xx.lxz.util.StatusBarUtil;
@@ -52,6 +38,10 @@ import com.xx.lxz.widget.CustomDialog;
 import com.xx.lxz.widget.CustomProgressDialog;
 import com.xx.lxz.widget.StepView;
 import com.xx.lxz.widget.itemdecoration.LinearLayoutDecoration;
+
+import net.arvin.selector.SelectorHelper;
+import net.arvin.selector.data.ConstantData;
+import net.arvin.selector.utils.PSGlideUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -97,34 +87,13 @@ public class IdentifyActivity extends BaseActivity {
     private Dialog mDialog;
     private List<TargetEntity> dates = new ArrayList<>();
 
-    //拍照或相册
-    private static final int CODE_GALLERY_REQUEST = 0xa0;
-    private static final int CODE_CAMERA_REQUEST = 0xa1;
-    private static final int CODE_RESULT_REQUEST = 0xa2;
-    private static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;
-    private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
+    private File fileCropUri1 ;
+    private File fileCropUri2 ;
+    private File fileCropUri3 ;
 
-    private File fileUri1 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/front_photo.jpg");
-    private File fileCropUri1 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/front_crop_photo.jpg");
-    private File fileUri2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+ "/back_photo.jpg");
-    private File fileCropUri2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/back_crop_photo.jpg");
-    private File fileUri3 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/icon_photo.jpg");
-    private File fileCropUri3 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/icon_crop_photo.jpg");
-
-    private Uri imageUri1;
-    private Uri cropImageUri1;
-    private Uri imageUri2;
-    private Uri cropImageUri2;
-    private Uri imageUri3;
-    private Uri cropImageUri3;
-    private static final int OUTPUT_X = 480;
-    private static final int OUTPUT_Y = 480;
-
-    private ImageLoader imageLoader = null;
-    private DisplayImageOptions options = null;
 
     private String fromFlag="1";
-
+    private ArrayList<String> selectedPictures = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,44 +145,7 @@ public class IdentifyActivity extends BaseActivity {
 //        View topView = StatusBarUtil.createTranslucentStatusBarView(this, getResources().getColor(R.color.white));
 //        ll_top.addView(topView);
 
-//        imageLoader = ImageLoader.getInstance();
-//        imageLoader.init(ImageLoaderConfiguration
-//                .createDefault(mActivity));
-//        options = new DisplayImageOptions.Builder()
-//                .displayer(new RoundedBitmapDisplayer(0xff000000, 10))
-//                .showStubImage(R.mipmap.addpic).cacheInMemory().cacheOnDisc()
-//                .build();
-
         customProgressDialog=new CustomProgressDialog(mActivity);
-
-//        String IDFrontImg=shareUtil.getString("IDFrontImg");
-//        String IDBackImg=shareUtil.getString("IDBackImg");
-//        String CurrentImg=shareUtil.getString("CurrentImg");
-//        if(IDFrontImg!=null){
-//            rl_idcard_front.setVisibility(View.GONE);
-//            iv_front_after_choose.setVisibility(View.VISIBLE);
-//            imageLoader.displayImage("file://" + IDFrontImg, iv_front_after_choose, options);
-//        }else{
-//            rl_idcard_front.setVisibility(View.VISIBLE);
-//            iv_front_after_choose.setVisibility(View.GONE);
-//        }
-//        if(IDBackImg!=null){
-//            rl_idcard_back.setVisibility(View.GONE);
-//            iv_idcard_after_choose.setVisibility(View.VISIBLE);
-//            imageLoader.displayImage("file://" + IDBackImg, iv_idcard_after_choose, options);
-//        }else{
-//            rl_idcard_back.setVisibility(View.VISIBLE);
-//            iv_idcard_after_choose.setVisibility(View.GONE);
-//            imageLoader.displayImage("file://" + IDFrontImg, iv_id_back, options);
-//        }
-//        if(CurrentImg!=null){
-//            rl_take_photo.setVisibility(View.GONE);
-//            iv_takephoto_after_choose.setVisibility(View.VISIBLE);
-//            imageLoader.displayImage("file://" + CurrentImg, iv_takephoto_after_choose, options);
-//        }else{
-//            rl_take_photo.setVisibility(View.VISIBLE);
-//            iv_takephoto_after_choose.setVisibility(View.GONE);
-//        }
     }
 
     @OnClick({R.id.iv_back,R.id.iv_front_after_choose,R.id.iv_idcard_after_choose,R.id.iv_takephoto_after_choose,R.id.btn_next})
@@ -330,9 +262,9 @@ public class IdentifyActivity extends BaseActivity {
                 adapter.notifyDataSetChanged();
 
                 if(dates.get(position).getText().equals("拍照")){
-                    autoObtainCameraPermission();
+                    takePhoto();
                 }else{
-                    autoObtainStoragePermission();
+                    selectPicture();
                 }
                 mDialog.dismiss();
             }
@@ -349,6 +281,24 @@ public class IdentifyActivity extends BaseActivity {
         }
         mDialog.show();
     }
+    private void selectPicture() {
+        checkPermission(new CheckPermListener() {
+            @Override
+            public void agreeAllPermission() {
+                SelectorHelper.selectPicture(mActivity, true,
+                        true, 1001);
+            }
+        }, "需要拍照和读取文件权限", Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
+
+    private void takePhoto() {
+        checkPermission(new CheckPermListener() {
+            @Override
+            public void agreeAllPermission() {
+                SelectorHelper.takePhoto(mActivity, true, 1001);
+            }
+        }, "需要拍照和读取文件权限", Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
 
     /**
      * 拍照或从相册获取回调
@@ -362,81 +312,26 @@ public class IdentifyActivity extends BaseActivity {
         /** attention to this below ,must add this**/
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                //拍照完成回调
-                case CODE_CAMERA_REQUEST:
-                    if(fromFlag.equals("1")){
-                        cropImageUri1 = Uri.fromFile(fileCropUri1);
-                        PhotoUtils.cropImageUri(mActivity, imageUri1, cropImageUri1, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
-                    }else if(fromFlag.equals("2")){
-                        cropImageUri2 = Uri.fromFile(fileCropUri2);
-                        PhotoUtils.cropImageUri(mActivity, imageUri2, cropImageUri2, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
-                    }else{
-                        cropImageUri3 = Uri.fromFile(fileCropUri3);
-                        PhotoUtils.cropImageUri(mActivity, imageUri3, cropImageUri3, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
-                    }
-                    break;
-                //访问相册完成回调
-                case CODE_GALLERY_REQUEST:
-                    if (hasSdcard()) {
+                case 1001:
+                    ArrayList<String> backPics = data.getStringArrayListExtra(ConstantData.KEY_BACK_PICTURES);
+                    if (backPics != null && backPics.size() > 0) {
+                        selectedPictures.clear();
+                        selectedPictures.addAll(backPics);
+
                         if(fromFlag.equals("1")){
-                            cropImageUri1 = Uri.fromFile(fileCropUri1);
-                            Uri newUri = Uri.parse(PhotoUtils.getPath(this, data.getData()));
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                newUri = FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID+".fileprovider", new File(newUri.getPath()));
-                            }
-                            PhotoUtils.cropImageUri(mActivity, newUri, cropImageUri1, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
-
+                            PSGlideUtil.loadImage(this, backPics.get(0), iv_front_after_choose);
+                            shareUtil.setString("IDFrontImg", backPics.get(0));
+                            fileCropUri1=new File(backPics.get(0));
                         }else if(fromFlag.equals("2")){
-                            cropImageUri2 = Uri.fromFile(fileCropUri2);
-                            Uri newUri = Uri.parse(PhotoUtils.getPath(this, data.getData()));
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                newUri = FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID+".fileprovider", new File(newUri.getPath()));
-                            }
-                            PhotoUtils.cropImageUri(mActivity, newUri, cropImageUri2, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
+                            PSGlideUtil.loadImage(this, backPics.get(0), iv_idcard_after_choose);
+                            shareUtil.setString("IDFrontImg", backPics.get(0));
+                            fileCropUri2=new File(backPics.get(0));
                         }else{
-                            cropImageUri3 = Uri.fromFile(fileCropUri3);
-                            Uri newUri = Uri.parse(PhotoUtils.getPath(this, data.getData()));
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                newUri = FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID+".fileprovider", new File(newUri.getPath()));
-                            }
-                            PhotoUtils.cropImageUri(mActivity, newUri, cropImageUri3, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
-                        }
-
-
-                    } else {
-                        ToastUtil.ToastShort(mActivity, "设备没有SD卡！");
-                    }
-                    break;
-                case CODE_RESULT_REQUEST:
-                    Bitmap bitmap;
-                    if(fromFlag.equals("1")){
-                        bitmap = PhotoUtils.getBitmapFromUri(cropImageUri1, mActivity);
-                        Log.i("TEST","fileCropUri1="+fileCropUri1);
-                        Log.i("TEST","cropImageUri1.getPath()="+cropImageUri1.getPath());
-                    }else if(fromFlag.equals("2")){
-                        bitmap = PhotoUtils.getBitmapFromUri(cropImageUri2, mActivity);
-                        Log.i("TEST","fileCropUri2="+fileCropUri2);
-                        Log.i("TEST","cropImageUri2.getPath()="+cropImageUri2.getPath());
-                    }else{
-                        bitmap = PhotoUtils.getBitmapFromUri(cropImageUri3, mActivity);
-                        Log.i("TEST","fileCropUri3="+fileCropUri3);
-                        Log.i("TEST","cropImageUri3.getPath()="+cropImageUri3.getPath());
-                    }
-
-//                    saveCusHeadImg(fileCropUri);
-                    if (bitmap != null) {
-                        if(fromFlag.equals("1")){
-                            iv_front_after_choose.setImageBitmap(bitmap);
-                            shareUtil.setString("IDFrontImg", cropImageUri1.getPath());
-                        }else if(fromFlag.equals("2")){
-                            iv_idcard_after_choose.setImageBitmap(bitmap);
-                            shareUtil.setString("IDBackImg", cropImageUri2.getPath());
-                        }else{
-                            iv_takephoto_after_choose.setImageBitmap(bitmap);
-                            shareUtil.setString("CurrentImg", cropImageUri3.getPath());
+                            PSGlideUtil.loadImage(this, backPics.get(0), iv_takephoto_after_choose);
+                            shareUtil.setString("IDFrontImg", backPics.get(0));
+                            fileCropUri3=new File(backPics.get(0));
                         }
                     }
-
                     break;
                 default:
             }
@@ -511,148 +406,4 @@ public class IdentifyActivity extends BaseActivity {
 
         }
     };
-
-    /**
-     * 申请权限回调
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case CAMERA_PERMISSIONS_REQUEST_CODE:
-//                dialog.dismiss();
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    if (hasSdcard()) {
-                        if(fromFlag.equals("1")){
-
-                            imageUri1 = Uri.fromFile(fileUri1);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                imageUri1 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri1);//通过FileProvider创建一个content类型的Uri
-                            }
-                            PhotoUtils.takePicture(this, imageUri1, CODE_CAMERA_REQUEST);
-
-                        }else if(fromFlag.equals("2")){
-                            imageUri2 = Uri.fromFile(fileUri2);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                imageUri2 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri2);//通过FileProvider创建一个content类型的Uri
-                            }
-                            PhotoUtils.takePicture(this, imageUri2, CODE_CAMERA_REQUEST);
-                        }else{
-                            imageUri3 = Uri.fromFile(fileUri3);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                imageUri3 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri3);//通过FileProvider创建一个content类型的Uri
-                            }
-                            PhotoUtils.takePicture(this, imageUri3, CODE_CAMERA_REQUEST);
-                        }
-
-
-                    } else {
-                        ToastUtil.ToastShort(mActivity, "设备没有SD卡！");
-                    }
-
-                    if (hasSdcard()) {
-                        if(fromFlag.equals("1")){
-                            imageUri1 = Uri.fromFile(fileUri1);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                imageUri1 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri1);//通过FileProvider创建一个content类型的Uri
-                            }
-                            PhotoUtils.takePicture(this, imageUri1, CODE_CAMERA_REQUEST);
-                        }else if(fromFlag.equals("2")){
-                            imageUri2 = Uri.fromFile(fileUri2);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                imageUri2 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri2);//通过FileProvider创建一个content类型的Uri
-                            }
-                            PhotoUtils.takePicture(this, imageUri2, CODE_CAMERA_REQUEST);
-                        }else{
-                            imageUri3 = Uri.fromFile(fileUri3);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                imageUri3 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri3);//通过FileProvider创建一个content类型的Uri
-                            }
-                            PhotoUtils.takePicture(this, imageUri3, CODE_CAMERA_REQUEST);
-                        }
-
-                    } else {
-                        ToastUtil.ToastShort(this, "设备没有SD卡！");
-                    }
-                } else {
-                    ToastUtil.ToastShort(this, "请允许打开相机！！");
-                }
-                break;
-            case STORAGE_PERMISSIONS_REQUEST_CODE:
-//                dialog.dismiss();
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    PhotoUtils.openPic(this, CODE_GALLERY_REQUEST);
-                } else {
-                    ToastUtil.ToastShort(this, "请允许打操作SDCard！！");
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    /**
-     * 检查设备是否存在SDCard的工具方法
-     */
-    public static boolean hasSdcard() {
-        String state = Environment.getExternalStorageState();
-        return state.equals(Environment.MEDIA_MOUNTED);
-    }
-
-    /**
-     * 自动获取sdk权限
-     */
-    private void autoObtainStoragePermission() {
-        mDialog.dismiss();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.mainActivity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSIONS_REQUEST_CODE);
-        } else {
-            PhotoUtils.openPic(this, CODE_GALLERY_REQUEST);
-        }
-
-    }
-
-    /**
-     * 自动获取相机权限
-     */
-    private void autoObtainCameraPermission() {
-
-        mDialog.dismiss();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-                ToastUtil.ToastShort(this, "您已经拒绝过一次");
-            }
-            ActivityCompat.requestPermissions(MainActivity.mainActivity, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, CAMERA_PERMISSIONS_REQUEST_CODE);
-        } else {//有权限直接调用系统相机拍照
-            if (hasSdcard()) {
-                if(fromFlag.equals("1")){
-                    imageUri1 = Uri.fromFile(fileUri1);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        imageUri1 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri1);//通过FileProvider创建一个content类型的Uri
-                    }
-                    PhotoUtils.takePicture(this, imageUri1, CODE_CAMERA_REQUEST);
-                }else if(fromFlag.equals("2")){
-                    imageUri2 = Uri.fromFile(fileUri2);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        imageUri2 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri2);//通过FileProvider创建一个content类型的Uri
-                    }
-                    PhotoUtils.takePicture(this, imageUri2, CODE_CAMERA_REQUEST);
-                }else{
-                    imageUri3 = Uri.fromFile(fileUri3);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        imageUri3 = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID+".fileprovider", fileUri3);//通过FileProvider创建一个content类型的Uri
-                    }
-                    PhotoUtils.takePicture(this, imageUri3, CODE_CAMERA_REQUEST);
-                }
-
-            } else {
-                ToastUtil.ToastShort(this, "设备没有SD卡！");
-            }
-        }
-    }
 }

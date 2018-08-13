@@ -1,0 +1,48 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.arvinljw'
+
+android {
+    compileSdkVersion ANDROID_BUILD_SDK_VERSION as int
+
+    defaultConfig {
+        minSdkVersion ANDROID_BUILD_MIN_SDK_VERSION as int
+        targetSdkVersion ANDROID_BUILD_TARGET_SDK_VERSION as int
+    }
+    // build a jar with source files
+    task sourcesJar(type: Jar) {
+        from android.sourceSets.main.java.srcDirs
+        classifier = 'sources'
+    }
+    task javadoc(type: Javadoc) {
+        failOnError  false
+        source = android.sourceSets.main.java.sourceFiles
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+        classpath += configurations.compile
+    }
+// build a jar with javadoc
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+}
+
+dependencies {
+    def dependencies = rootProject.ext.dependencies
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api dependencies.support_v4
+    api dependencies.support_v7
+    api dependencies.recyclerview
+
+    api (dependencies.glide){
+        exclude group: 'com.android.support'
+    }
+    annotationProcessor dependencies.glidecompiler
+    api dependencies.annotations
+    api dependencies.exifinterface
+}

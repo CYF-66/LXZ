@@ -9,10 +9,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.xx.lxz.R;
 import com.xx.lxz.activity.my.MessageActivity;
 import com.xx.lxz.adapter.ProductViewPagerAdapter;
@@ -44,8 +40,6 @@ public class HomeActivity extends BaseActivity implements TabLayout.OnTabSelecte
     private ProductViewPagerAdapter viewPagerOrderAdapter;
     private String[] proTitles={GlobalConfig.CATEGORY_NAME_RENT,GlobalConfig.CATEGORY_NAME_SECOND_HAND_RENT} ;
 
-    public static ImageLoader imageLoader = null;
-    public static DisplayImageOptions options = null;
     private BadgeView badge;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +48,6 @@ public class HomeActivity extends BaseActivity implements TabLayout.OnTabSelecte
         ButterKnife.bind(HomeActivity.this);
         mActivity=HomeActivity.this;
 
-        imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration
-                .createDefault(mActivity));
-        options = new DisplayImageOptions.Builder()
-                .displayer(new RoundedBitmapDisplayer(0xff000000, 10))
-                .showStubImage(R.mipmap.login_logo).cacheInMemory().cacheOnDisc()
-                .build();
         //订单
         setTab();
         iv_msg.setOnClickListener(new View.OnClickListener() {

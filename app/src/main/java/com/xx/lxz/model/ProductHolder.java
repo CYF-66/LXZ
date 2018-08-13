@@ -8,10 +8,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xx.lxz.R;
-import com.xx.lxz.activity.home.HomeActivity;
 import com.xx.lxz.adapter.ModelRecyclerAdapter;
 import com.xx.lxz.bean.Product;
 import com.xx.lxz.bean.RecyclerItemViewId;
+
+import net.arvin.selector.utils.PSGlideUtil;
 
 import butterknife.BindView;
 
@@ -58,8 +59,7 @@ public class ProductHolder extends ModelRecyclerAdapter.ModelViewHolder<Product.
         this.position = positon;
         this.dataList = dataList;
         this.adapter = adapter;
-
-        HomeActivity.imageLoader.displayImage(dataList.getProduct_img(), iv_img, HomeActivity.options);// 设置图片
+        PSGlideUtil.loadImage(context, dataList.getProduct_img(), iv_img);
         if(TextUtils.isEmpty(dataList.getProduct_deep())){
             tv_phone_type.setText(dataList.getProduct_name());
         }else{
