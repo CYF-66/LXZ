@@ -30,6 +30,7 @@ import com.xx.lxz.bean.Common;
 import com.xx.lxz.bean.StepMode;
 import com.xx.lxz.bean.TargetEntity;
 import com.xx.lxz.util.NetUtil;
+import com.xx.lxz.util.PermissionUtils;
 import com.xx.lxz.util.SharedPreferencesUtil;
 import com.xx.lxz.util.SizeUtils;
 import com.xx.lxz.util.StatusBarUtil;
@@ -201,15 +202,30 @@ public class IdentifyActivity extends BaseActivity {
                     return;
                 }
 
-                if(!fileCropUri1.exists()){
+                if(fileCropUri1!=null){
+                    if(!fileCropUri1.exists()){
+                        ToastUtil.ToastShort(mActivity,"请上传身份证正面照");
+                        return;
+                    }
+                }else{
                     ToastUtil.ToastShort(mActivity,"请上传身份证正面照");
                     return;
                 }
-                if(!fileCropUri2.exists()){
+                if(fileCropUri2!=null){
+                    if(!fileCropUri2.exists()){
+                        ToastUtil.ToastShort(mActivity,"请上传身份证背面照");
+                        return;
+                    }
+                }else{
                     ToastUtil.ToastShort(mActivity,"请上传身份证背面照");
                     return;
                 }
-                if(!fileCropUri3.exists()){
+                if(fileCropUri3!=null){
+                    if(!fileCropUri3.exists()){
+                        ToastUtil.ToastShort(mActivity,"请上传本人正面照");
+                        return;
+                    }
+                }else{
                     ToastUtil.ToastShort(mActivity,"请上传本人正面照");
                     return;
                 }

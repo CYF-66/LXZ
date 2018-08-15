@@ -20,7 +20,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/title"
             android:layout_marginTop="10dp"
-            android:gravity="center_horizontal"
             android:orientation="vertical"
             >
             <LinearLayout
@@ -307,6 +306,50 @@
                     android:text="耳机充电器"
                     />
             </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <CheckBox
+                    android:id="@+id/checkbox"
+                    android:checked="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/title_text"
+                    android:text="申请即同意"/>
+                <TextView
+                    android:id="@+id/tv_query"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/bt_bg"
+                    android:text="《征信查询协议》"/>
+                <TextView
+                    android:id="@+id/tv_rent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/bt_bg"
+                    android:text="《产品租赁服务协议》"/>
+            </LinearLayout>
+            <TextView
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginBottom="20dp"
+                android:id="@+id/tv_repay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/bt_bg"
+                android:text="《还款管理协议》"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

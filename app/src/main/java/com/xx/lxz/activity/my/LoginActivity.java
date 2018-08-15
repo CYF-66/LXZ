@@ -3,15 +3,9 @@ package com.xx.lxz.activity.my;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +19,7 @@ import com.xx.lxz.activity.my.set.WebViewActivity;
 import com.xx.lxz.api.HttpConstant;
 import com.xx.lxz.api.HttpService;
 import com.xx.lxz.api.MessageCode;
+import com.xx.lxz.base.BaseActivity;
 import com.xx.lxz.base.BaseResult;
 import com.xx.lxz.bean.Register;
 import com.xx.lxz.util.LogUtil;
@@ -42,7 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     //标题
     @BindView(R.id.iv_back)
@@ -118,8 +113,8 @@ public class LoginActivity extends AppCompatActivity {
             case R.id.btn_login://登录
 //                et_phone.setText("");
 
-                String phoneNum=et_phone.getText().toString();
-                String yzmCode=et_check_num.getText().toString();
+                final String phoneNum=et_phone.getText().toString();
+                final String yzmCode=et_check_num.getText().toString();
                 if (phoneNum.equals("")) {
                     ToastUtil.ToastShort(mActivity, "手机号不能为空");
                     return;
@@ -134,19 +129,24 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//检查是否需要权限
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                        //增加获取设备信息权限
-                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 0);//申请访问设备信息权限
-                    } else {//已获取权限
-                        //TODO
-
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//检查是否需要权限
+//                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+//                        //增加获取设备信息权限
+//                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 0);//申请访问设备信息权限
+//                    } else {//已获取权限
+//                        //TODO
+//
+//                        login(yzmToken,yzmCode,phoneNum,PublicParams.channelId,NetUtil.getDeviceId(mActivity));
+//                    }
+//                }else{
+//
+//                }
+                checkPermission(new CheckPermListener() {
+                    @Override
+                    public void agreeAllPermission() {
                         login(yzmToken,yzmCode,phoneNum,PublicParams.channelId,NetUtil.getDeviceId(mActivity));
                     }
-                }else{
-                    login(yzmToken,yzmCode,phoneNum,PublicParams.channelId,NetUtil.getDeviceId(mActivity));
-                }
-
+                }, "需要读取设备信息权限", Manifest.permission.READ_PHONE_STATE);
                 break;
             case R.id.tv_register://注册
 //                et_phone.setText("");
@@ -333,26 +333,4 @@ public class LoginActivity extends AppCompatActivity {
 
         }
     };
-
-    /**
-     * 权限回调
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case 0:
-                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    //TODO
-                    login(yzmToken,et_check_num.getText().toString().trim(),et_phone.getText().toString().trim(),PublicParams.channelId,NetUtil.getDeviceId(mActivity));
-                }else{
-                    ToastUtil.ToastShort(mActivity,"没有访问设备信息权限，请前去设置中开启权限");
-                }
-                break;
-            default:
-                break;
-        }
-    }
 }

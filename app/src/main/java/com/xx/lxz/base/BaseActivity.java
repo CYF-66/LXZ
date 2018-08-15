@@ -45,6 +45,15 @@ public class BaseActivity extends AppCompatActivity implements EasyPermissions.P
 			EasyPermissions.requestPermissions(this, resString, RC_PERM, mPerms);
 		}
 	}
+	public void checkPermission(CheckPermListener listener, String resString, int requestCode,String... mPerms) {
+		mListener = listener;
+		if (EasyPermissions.hasPermissions(this, mPerms)) {
+			if (mListener != null)
+				mListener.agreeAllPermission();
+		} else {
+			EasyPermissions.requestPermissions(this, resString, RC_PERM, mPerms);
+		}
+	}
 	/**
 	 * 关闭软键盘
 	 */

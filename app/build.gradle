@@ -13,6 +13,9 @@ android {
         versionCode VERSION_CODE as int
         versionName VERSION_NAME
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        //百度推送
+        buildConfigField "String", "BAIDU_APP_ID", "\"${project.property("BAIDU_APP_ID")}\""
     }
     buildTypes {
         release {

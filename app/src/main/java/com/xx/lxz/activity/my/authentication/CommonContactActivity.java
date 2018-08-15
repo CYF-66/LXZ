@@ -404,7 +404,25 @@ public class CommonContactActivity extends BaseActivity {
                     CommonContactBean contactBean=new Gson().fromJson(result,
                             CommonContactBean.class);
                     if(contactBean.getCode()==1){//进入到身份认证页面
+                        if(contactBean.getData()!=null&&contactBean.getData().size()>0){
 
+                            for(int i=0;i<contactBean.getData().size();i++){
+
+                                if(i==0){
+                                    et_relative1_name.setText(contactBean.getData().get(i).getLname());
+                                    et_relative1_phone.setText(contactBean.getData().get(i).getLphone());
+                                    et_relative1_address.setText(contactBean.getData().get(i).getLmemo());
+                                    tv_relative1_sex.setText(contactBean.getData().get(i).getLsex());
+                                    tv_relative1_relationship.setText(contactBean.getData().get(i).getLrelation());
+                                }else if(i==1){
+                                    et_relative2_name.setText(contactBean.getData().get(i).getLname());
+                                    et_relative2_phone.setText(contactBean.getData().get(i).getLphone());
+                                    et_relative2_address.setText(contactBean.getData().get(i).getLmemo());
+                                    tv_relative2_sex.setText(contactBean.getData().get(i).getLsex());
+                                    tv_relative2_relationship.setText(contactBean.getData().get(i).getLrelation());
+                                }
+                            }
+                        }
                         et_relative1_name.setFocusable(true);
                         et_relative1_name.setFocusableInTouchMode(true);
                         et_relative1_phone.setFocusable(true);
@@ -434,11 +452,11 @@ public class CommonContactActivity extends BaseActivity {
                                     tv_relative1_sex.setText(contactBean.getData().get(i).getLsex());
                                     tv_relative1_relationship.setText(contactBean.getData().get(i).getLrelation());
                                 }else if(i==1){
-                                    et_relative1_name.setText(contactBean.getData().get(i).getLname());
-                                    et_relative1_phone.setText(contactBean.getData().get(i).getLphone());
-                                    et_relative1_address.setText(contactBean.getData().get(i).getLmemo());
-                                    tv_relative1_sex.setText(contactBean.getData().get(i).getLsex());
-                                    tv_relative1_relationship.setText(contactBean.getData().get(i).getLrelation());
+                                    et_relative2_name.setText(contactBean.getData().get(i).getLname());
+                                    et_relative2_phone.setText(contactBean.getData().get(i).getLphone());
+                                    et_relative2_address.setText(contactBean.getData().get(i).getLmemo());
+                                    tv_relative2_sex.setText(contactBean.getData().get(i).getLsex());
+                                    tv_relative2_relationship.setText(contactBean.getData().get(i).getLrelation());
                                 }
                             }
                         }

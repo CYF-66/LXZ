@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.xx.lxz.BuildConfig;
 import com.xx.lxz.R;
 import com.xx.lxz.api.HttpConstant;
 import com.xx.lxz.api.HttpService;
@@ -320,7 +321,7 @@ public class UpdateManager {
             return;
         }
         if (Build.VERSION.SDK_INT >= 24) {//判读版本是否在7.0以上
-            Uri apkUri = FileProvider.getUriForFile(context, "com.xx.lxz.fileprovider", apkfile);//在AndroidManifest中的android:authorities值
+            Uri apkUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".selector.provider", apkfile);//在AndroidManifest中的android:authorities值
             Intent install = new Intent(Intent.ACTION_VIEW);
             install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//添加这一句表示对目标应用临时授权该Uri所代表的文件

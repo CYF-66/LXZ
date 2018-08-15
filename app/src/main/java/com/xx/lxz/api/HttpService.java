@@ -298,8 +298,8 @@ public class HttpService {
             HttpClient httpClient = null;
             // 获得https请求 httpclient
             httpClient = getNewHttpClient(context);
-            httpClient.getParams().setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 20000);
-            httpClient.getParams().setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 20000);
+//            httpClient.getParams().setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 20000);
+//            httpClient.getParams().setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 20000);
 
             HttpPost httpPost = new HttpPost(url);
 //            httpPost.addHeader(HTTP.CONTENT_TYPE, "multipart/form-data");

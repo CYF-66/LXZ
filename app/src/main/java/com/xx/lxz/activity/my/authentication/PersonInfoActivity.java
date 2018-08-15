@@ -141,6 +141,7 @@ public class PersonInfoActivity extends BaseActivity {
     private SharedPreferencesUtil shareUtil;
     private boolean isEdit=true;
     private ArrayList<String> selectedPictures = new ArrayList<>();
+    private boolean isEmpty=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -356,7 +357,18 @@ public class PersonInfoActivity extends BaseActivity {
                     objectList.put("company",bian1);//公司地址
                     objectList.put("income",bian2);//月收入
                     objectList.put("consume",bian3);//月消费
-                    objectList.put("workcardFile",fileCropUri);
+                    if(fileCropUri!=null){
+                        if(!fileCropUri.exists()){
+                            ToastUtil.ToastShort(mActivity,"请上传工作证照");
+                            return;
+                        }else{
+                            objectList.put("workcardFile",fileCropUri);
+                        }
+                    }else{
+                        ToastUtil.ToastShort(mActivity,"请上传工作证照");
+                        return;
+                    }
+
                 }
 //                objectList.put("name","陈银飞");
                 objectList.put("sex",sex);
@@ -367,7 +379,19 @@ public class PersonInfoActivity extends BaseActivity {
                 objectList.put("nowaddress",curAddr);
                 objectList.put("bankcard",bankId);
                 objectList.put("bankaddress",bankFench);
-                objectList.put("zhimfvideoFile",vedio);
+                if(isEmpty){
+                    if(vedio!=null){
+                        if(!vedio.exists()){
+                            ToastUtil.ToastShort(mActivity,"请上传芝麻信用视频");
+                            return;
+                        }else{
+                            objectList.put("zhimfvideoFile",vedio);
+                        }
+                    }else{
+                        ToastUtil.ToastShort(mActivity,"请上传芝麻信用视频");
+                        return;
+                    }
+                }
 
 //                if(isStudent){
 //                    objectList.put("type","2");//学生
@@ -572,6 +596,8 @@ public class PersonInfoActivity extends BaseActivity {
 //                        Uri url=data.getData();
 //                        LogUtil.d("TEST","path="+path);
                         vedio = new File(path);
+//                        PSGlideUtil.loadVedio(mActivity, Uri.fromFile(vedio), iv_work_pic);
+
                         if (!vedio.exists()) {
                             vedio.mkdir();
 //                            break;
@@ -685,6 +711,45 @@ public class PersonInfoActivity extends BaseActivity {
                             PerInfoBean.class);
                     if(common.getCode()==1){//进入到身份认证页面
                         isEdit=true;
+                        et_mingz.setFocusable(false);
+                        et_mingz.setFocusableInTouchMode(false);
+                        if(common.getData().getType().equals("1")){//成人
+                            tv_bian1.setText("公司地址");
+                            tv_bian2.setText("月收入");
+                            tv_bian3.setText("月消费");
+                            et_company_address.setText(common.getData().getCompany());
+                            et_work.setText(common.getData().getIncome());
+                            et_money_earn.setText(common.getData().getConsume());
+                        }else{//学生
+                            tv_bian1.setText("入校时间");
+                            tv_bian2.setText("所属院校");
+                            tv_bian3.setText("学生证编号");
+                            et_company_address.setText(common.getData().getSchool());
+                            et_work.setText(common.getData().getIndatestring());
+                            et_money_earn.setText(common.getData().getStudentcard());
+
+                        }
+                        tv_sex.setText(common.getData().getSex());
+                        et_mingz.setText(common.getData().getEthnic());
+                        tv_birth_date.setText(common.getData().getBirthday());
+                        et_jiguan.setText(common.getData().getNativeplace());
+                        et_huji.setText(common.getData().getKoseki());
+                        et_cur_addr.setText(common.getData().getNowaddress());
+                        et_bank_id.setText(common.getData().getBankcard());
+                        et_bank_account.setText(common.getData().getBankaddress());
+                        tv_media_path.setText(common.getData().getZhimfvideo());
+                        if(TextUtils.isEmpty(common.getData().getZhimfvideo())){
+                            isEmpty=true;
+                        }else{
+                            isEmpty=false;
+                            if(common.getData().getZhimfvideo().contains("/")){
+                                String[] str=common.getData().getZhimfvideo().split("/");
+                                tv_media_path.setText(str[str.length-1]);
+                            }else{
+                                tv_media_path.setText(path);
+                            }
+                        }
+                        btn_save.setVisibility(View.VISIBLE);
                     }else{//身份已认证，请不要重复认证
                         isEdit=false;
                         if(common.getData().getType().equals("1")){//成人
@@ -713,7 +778,17 @@ public class PersonInfoActivity extends BaseActivity {
                         et_bank_id.setText(common.getData().getBankcard());
                         et_bank_account.setText(common.getData().getBankaddress());
                         tv_media_path.setText(common.getData().getZhimfvideo());
-
+                        if(TextUtils.isEmpty(common.getData().getZhimfvideo())){
+                            isEmpty=true;
+                        }else{
+                            isEmpty=false;
+                            if(common.getData().getZhimfvideo().contains("/")){
+                                String[] str=common.getData().getZhimfvideo().split("/");
+                                tv_media_path.setText(str[str.length-1]);
+                            }else{
+                                tv_media_path.setText(path);
+                            }
+                        }
                         et_company_address.setFocusable(false);
                         et_company_address.setFocusableInTouchMode(false);
                         et_work.setFocusable(false);
@@ -733,7 +808,7 @@ public class PersonInfoActivity extends BaseActivity {
                         et_bank_account.setFocusable(false);
                         et_bank_account.setFocusableInTouchMode(false);
 
-
+                        btn_save.setVisibility(View.GONE);
                         ToastUtil.ToastShort(mActivity, common.getMessage());
                     }
 

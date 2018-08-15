@@ -1,13 +1,11 @@
 package net.arvin.selector.utils;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 
 import net.arvin.selector.R;
 
@@ -30,6 +28,12 @@ public class PSGlideUtil {
     public static void loadImage(Context context, int resId, ImageView imageView) {
         Glide.with(context)
                 .load(resId)
+                .into(imageView);
+    }
+
+    public static void loadVedio(Context context, Uri uri, ImageView imageView) {
+        Glide.with(context)
+                .load(uri)
                 .into(imageView);
     }
 

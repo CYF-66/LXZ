@@ -32,6 +32,7 @@ import com.xx.lxz.bean.RefreshtEvent;
 import com.xx.lxz.config.GlobalConfig;
 import com.xx.lxz.update.UpdateManager;
 import com.xx.lxz.util.NetUtil;
+import com.xx.lxz.util.PermissionUtils;
 import com.xx.lxz.util.SharedPreferencesUtil;
 import com.xx.lxz.util.StatusBarUtil;
 import com.xx.lxz.util.ToastUtil;
@@ -104,8 +105,7 @@ public class MainActivity extends TabActivity{
         ll_home.setSelected(true);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);//申请权限
+            ActivityCompat.requestPermissions(this, PermissionUtils.STORAGE, 1);//申请权限
 //            ToastUtil.ToastShort(mainActivity,"请允许权限进行下载安装");
         } else {//已拥有权限
             // 这里来检测版本是否需要更新
@@ -284,7 +284,7 @@ public class MainActivity extends TabActivity{
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
-            if (permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (permissions[0].equals(Manifest.permission.READ_EXTERNAL_STORAGE)&&permissions[1].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // 这里来检测版本是否需要更新
                     String versionName=NetUtil.getVersionName(this);

@@ -402,7 +402,19 @@ public class ContactActivity extends BaseActivity {
                     ContactBean contactBean=new Gson().fromJson(result,
                             ContactBean.class);
                     if(contactBean.getCode()==1){//进入到身份认证页面
+                        if(contactBean.getData()!=null&&!contactBean.getData().equals(null)){
+                            et_relative1_name.setText(contactBean.getData().getFamily_linkone_name());
+                            et_relative1_phone.setText(contactBean.getData().getFamily_linkone_phone());
+                            et_relative1_address.setText(contactBean.getData().getFamily_linkone_address());
+                            tv_relative1_sex.setText(contactBean.getData().getFamily_linkone_sex());
+                            tv_relative1_relationship.setText(contactBean.getData().getFamily_linkone_relation());
 
+                            et_relative2_name.setText(contactBean.getData().getFamily_linktwo_name());
+                            et_relative2_phone.setText(contactBean.getData().getFamily_linktwo_phone());
+                            et_relative2_address.setText(contactBean.getData().getFamily_linktwo_address());
+                            tv_relative2_sex.setText(contactBean.getData().getFamily_linktwo_sex());
+                            tv_relative2_relationship.setText(contactBean.getData().getFamily_linktwo_relation());
+                        }
                         et_relative1_name.setFocusable(true);
                         et_relative1_name.setFocusableInTouchMode(true);
                         et_relative1_phone.setFocusable(true);
@@ -422,19 +434,18 @@ public class ContactActivity extends BaseActivity {
                         btn_save.setVisibility(View.VISIBLE);
                     }else if(contactBean.getCode()==0){//身份已认证，请不要重复认证
                         if(contactBean.getData()!=null&&!contactBean.getData().equals(null)){
+                            et_relative1_name.setText(contactBean.getData().getFamily_linkone_name());
+                            et_relative1_phone.setText(contactBean.getData().getFamily_linkone_phone());
+                            et_relative1_address.setText(contactBean.getData().getFamily_linkone_address());
+                            tv_relative1_sex.setText(contactBean.getData().getFamily_linkone_sex());
+                            tv_relative1_relationship.setText(contactBean.getData().getFamily_linkone_relation());
 
+                            et_relative2_name.setText(contactBean.getData().getFamily_linktwo_name());
+                            et_relative2_phone.setText(contactBean.getData().getFamily_linktwo_phone());
+                            et_relative2_address.setText(contactBean.getData().getFamily_linktwo_address());
+                            tv_relative2_sex.setText(contactBean.getData().getFamily_linktwo_sex());
+                            tv_relative2_relationship.setText(contactBean.getData().getFamily_linktwo_relation());
                         }
-                        et_relative1_name.setText(contactBean.getData().getFamily_linkone_name());
-                        et_relative1_phone.setText(contactBean.getData().getFamily_linkone_phone());
-                        et_relative1_address.setText(contactBean.getData().getFamily_linkone_address());
-                        tv_relative1_sex.setText(contactBean.getData().getFamily_linkone_sex());
-                        tv_relative1_relationship.setText(contactBean.getData().getFamily_linkone_relation());
-
-                        et_relative2_name.setText(contactBean.getData().getFamily_linktwo_name());
-                        et_relative2_phone.setText(contactBean.getData().getFamily_linktwo_phone());
-                        et_relative2_address.setText(contactBean.getData().getFamily_linktwo_address());
-                        tv_relative2_sex.setText(contactBean.getData().getFamily_linktwo_sex());
-                        tv_relative2_relationship.setText(contactBean.getData().getFamily_linktwo_relation());
 
 
                         et_relative1_name.setFocusable(false);

@@ -11,6 +11,9 @@ import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -21,6 +24,7 @@ import com.xx.lxz.App;
 import com.xx.lxz.R;
 import com.xx.lxz.activity.my.AddAddressActivity;
 import com.xx.lxz.activity.my.TakeOrderSuccessActivity;
+import com.xx.lxz.activity.my.set.WebViewActivity;
 import com.xx.lxz.api.HttpConstant;
 import com.xx.lxz.api.HttpService;
 import com.xx.lxz.api.MessageCode;
@@ -79,7 +83,15 @@ public class ApplyActivity extends BaseActivity {
     @BindView(R.id.tv_network)
     TextView tv_network;//网络
     @BindView(R.id.btn_apply)
-    TextView btn_apply;//确认申请
+    Button btn_apply;//确认申请
+    @BindView(R.id.tv_query)
+    TextView tv_query;//征信查询协议
+    @BindView(R.id.tv_rent)
+    TextView tv_rent;//产品租赁服务协议
+    @BindView(R.id.tv_repay)
+    TextView tv_repay;//还款管理协议
+    @BindView(R.id.checkbox)
+    CheckBox checkbox;
     private Activity mActivity;
     private CustomProgressDialog customProgressDialog;
     private String addr="";//详细地址
@@ -128,9 +140,25 @@ public class ApplyActivity extends BaseActivity {
         tv_circle.setText(product_zq);
 
         getInfo();
+        btn_apply.setBackground(mActivity.getResources().getDrawable(R.drawable.bt_bg));
+        btn_apply.setEnabled(true);
+        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                // TODO Auto-generated method stub
+                if(isChecked){
+                    btn_apply.setBackground(mActivity.getResources().getDrawable(R.drawable.bt_bg));
+                    btn_apply.setEnabled(true);
+                }else{
+                    btn_apply.setBackground(mActivity.getResources().getDrawable(R.drawable.bt_bg_unselect));
+                    btn_apply.setEnabled(false);
+                }
+            }
+        });
     }
 
-    @OnClick({R.id.iv_back,R.id.ll_address_content,R.id.btn_apply})
+    @OnClick({R.id.iv_back,R.id.ll_address_content,R.id.btn_apply,R.id.tv_query,R.id.tv_rent,R.id.tv_repay})
 
     public void ck(View v) {
         Intent intent = null;
@@ -139,15 +167,29 @@ public class ApplyActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.ll_address_content://调转地址页面选取地址
-
                 intent=new Intent(mActivity, AddAddressActivity.class);
-//                intent.putExtra("comeFrom","apply");
                 startActivityForResult(intent,1);
-//                intent=new Intent(mActivity, AddAddressActivity.class);
-//                startActivityForResult(intent,1);
+                break;
+            case R.id.tv_query://征信查询协议
+                String cid=shareUtil.getString("cid");
+                intent=new Intent(this,WebViewActivity.class);
+                intent.putExtra("title","征信查询授权书");
+                intent.putExtra("url","https://91xiaoxiangzu.com/xxzapp/proxy.html?cid"+cid);
+                startActivity(intent);
+                break;
+            case R.id.tv_rent://产品租赁服务协议
+                intent=new Intent(this,WebViewActivity.class);
+                intent.putExtra("title","笑享租租赁协议");
+                intent.putExtra("url","https://91xiaoxiangzu.com/xxzapp/contract.html");
+                startActivity(intent);
+                break;
+            case R.id.tv_repay://还款管理协议
+                intent=new Intent(this,WebViewActivity.class);
+                intent.putExtra("title","还款管理协议");
+                intent.putExtra("url","https://91xiaoxiangzu.com/xxzapp/paymanage.html");
+                startActivity(intent);
                 break;
             case R.id.btn_apply:
-
                 showDialog();
                 break;
         }
