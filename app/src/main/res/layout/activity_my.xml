@@ -65,7 +65,7 @@
                     android:layout_height="80dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20dp"
-                    android:background="@mipmap/logo_login" />
+                    android:background="@mipmap/touxiang" />
 
                 <TextView
                     android:id="@+id/tv_phone"

@@ -29,6 +29,7 @@ import com.xx.lxz.bean.RefreshtEvent;
 import com.xx.lxz.config.GlobalConfig;
 import com.xx.lxz.util.NetUtil;
 import com.xx.lxz.util.PublicParams;
+import com.xx.lxz.util.SharedPreferencesUtil;
 import com.xx.lxz.util.ToastUtil;
 import com.xx.lxz.widget.CustomProgressDialog;
 import com.xx.lxz.widget.swipetoloadlayout.OnLoadMoreListener;
@@ -65,6 +66,7 @@ public class ToBePayOrderFragment extends BaseFragment implements OnRefreshListe
     private CustomProgressDialog customProgressDialog;
     private int currentpage=1;//当前页
     private List<OrderDTO> dataList=new ArrayList<>();
+    private SharedPreferencesUtil shareUtil;
     /**
      * 实例化
      * @param sectionNumber
@@ -91,6 +93,7 @@ public class ToBePayOrderFragment extends BaseFragment implements OnRefreshListe
 
     @Override
     protected void initData() {
+        shareUtil = SharedPreferencesUtil.getinstance(mContext);
         currentpage=1;
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -100,8 +103,12 @@ public class ToBePayOrderFragment extends BaseFragment implements OnRefreshListe
 
 //        OrderAdapter adapter = new OrderAdapter(mContext, dataList);
 //        refreshRecyclerView.setAdapter(adapter);
-
-        getBookList();
+        if (shareUtil.getBoolean("IsLogin")) {
+            getBookList();
+        }else{
+            ll_no_data.setVisibility(View.VISIBLE);
+            refreshRecyclerView.setVisibility(View.GONE);
+        }
     }
 
     /**

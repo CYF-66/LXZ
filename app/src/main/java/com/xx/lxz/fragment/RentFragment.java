@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.xx.lxz.R;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class RentFragment extends BaseFragment implements OnRefreshListener, OnLoadMoreListener {
 
@@ -45,6 +47,18 @@ public class RentFragment extends BaseFragment implements OnRefreshListener, OnL
 
     @BindView(R.id.indicator)
     LinearLayout indicator;
+    @BindView(R.id.ll_xiangl)
+    LinearLayout ll_xiangl;//项链
+    @BindView(R.id.ll_xiangs)
+    LinearLayout ll_xiangs;//香水
+    @BindView(R.id.ll_bw)
+    LinearLayout ll_bw;//宝马
+    @BindView(R.id.ll_fll)
+    LinearLayout ll_fll;//法拉利
+    @BindView(R.id.tv_she_more)
+    TextView tv_she_more;//奢侈品更多
+    @BindView(R.id.tv_car_more)
+    TextView tv_car_more;//租车更多
 
     @BindView(R.id.super_recyclerview)
     RecyclerView refreshRecyclerView;
@@ -58,7 +72,7 @@ public class RentFragment extends BaseFragment implements OnRefreshListener, OnL
     private int oldPosition = 0;
     private MyAdapter adapter;
     private Handler mHandler;
-    int image[] = { R.mipmap.home_banner1, R.mipmap.home_banner2,
+    int image[] = { R.mipmap.home_banner4, R.mipmap.home_banner3,
             R.mipmap.home_banner1,
     };
 
@@ -95,11 +109,13 @@ public class RentFragment extends BaseFragment implements OnRefreshListener, OnL
 
     @Override
     protected void initData() {
-        init();
 
-        refreshRecyclerView.setLayoutManager(new GridLayoutManager(mContext,2));
-        refreshRecyclerView.setNestedScrollingEnabled(false);
-        queryProduct();
+        if(mHandler==null){
+            init();
+            refreshRecyclerView.setLayoutManager(new GridLayoutManager(mContext,2));
+            refreshRecyclerView.setNestedScrollingEnabled(false);
+            queryProduct();
+        }
     }
 
     /**
@@ -168,6 +184,31 @@ public class RentFragment extends BaseFragment implements OnRefreshListener, OnL
 
     }
 
+    @OnClick({R.id.ll_xiangl,R.id.ll_xiangs,R.id.ll_bw,R.id.ll_fll,R.id.tv_she_more,R.id.tv_car_more})
+
+    public void onClick(View v) {
+        Intent intent=null;
+        switch (v.getId()) {
+            case R.id.ll_xiangl://项链
+                ToastUtil.ToastShort(mContext,"敬请期待");
+                break;
+            case R.id.ll_xiangs://香水
+                ToastUtil.ToastShort(mContext,"敬请期待");
+                break;
+            case R.id.ll_bw://宝马
+                ToastUtil.ToastShort(mContext,"敬请期待");
+                break;
+            case R.id.ll_fll://法拉利
+                ToastUtil.ToastShort(mContext,"敬请期待");
+                break;
+            case R.id.tv_she_more://奢侈品更多
+                ToastUtil.ToastShort(mContext,"敬请期待");
+                break;
+            case R.id.tv_car_more://租车更多
+                ToastUtil.ToastShort(mContext,"敬请期待");
+                break;
+        }
+    }
     @Override
     public void onLoadMore() {
 
@@ -183,6 +224,7 @@ public class RentFragment extends BaseFragment implements OnRefreshListener, OnL
         @Override
         public int getCount() {
             return imageView_list == null ? 0 : imageView_list.size();
+//            return Integer.MAX_VALUE;//返回一个无限大的值，可以 无限循环
         }
 
         @Override
@@ -192,14 +234,14 @@ public class RentFragment extends BaseFragment implements OnRefreshListener, OnL
 
         @Override
         public Object instantiateItem(ViewGroup view, int position) {
-            ((ViewPager) view).addView(imageView_list.get(position));
-            return imageView_list.get(position);
+            ((ViewPager) view).addView(imageView_list.get(position % imageView_list.size()));
+            return imageView_list.get(position % imageView_list.size());
         }
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             // container.removeView(object);
-            ((ViewPager) container).removeView((View) object);
+            ((ViewPager) container).removeView(imageView_list.get(position % imageView_list.size()));
         }
 
     }

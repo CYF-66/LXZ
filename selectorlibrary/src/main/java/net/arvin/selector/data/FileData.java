@@ -94,7 +94,7 @@ public class FileData {
     }
 
     private static String[] getSupportMineTypes() {
-        return new String[]{"image/jpeg", "image/png"};
+        return new String[]{"image/jpeg", "image/png","video/*"};
     }
 
     public interface DataCallback {

@@ -613,6 +613,7 @@ public class PersonInfoActivity extends BaseActivity {
                         }else{
                             tv_media_path.setText(path);
                         }
+                        isEmpty=false;
                         //传换文件流，上传
 //                        submitVedio();
                     } catch (Exception e) {

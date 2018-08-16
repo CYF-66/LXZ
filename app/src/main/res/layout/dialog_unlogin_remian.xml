@@ -3,13 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="220dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingBottom="10dp"
     android:paddingTop="10dp"
     android:background="@mipmap/img_bg_remian"
     >
 
+    <ImageView
+        android:layout_marginTop="25dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:background="@mipmap/touxiang"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

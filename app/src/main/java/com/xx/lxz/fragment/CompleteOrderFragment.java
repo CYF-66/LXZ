@@ -19,6 +19,7 @@ import com.xx.lxz.bean.Order;
 import com.xx.lxz.bean.OrderDTO;
 import com.xx.lxz.util.NetUtil;
 import com.xx.lxz.util.PublicParams;
+import com.xx.lxz.util.SharedPreferencesUtil;
 import com.xx.lxz.util.ToastUtil;
 import com.xx.lxz.widget.CustomProgressDialog;
 import com.xx.lxz.widget.swipetoloadlayout.OnLoadMoreListener;
@@ -51,6 +52,7 @@ public class CompleteOrderFragment extends BaseFragment implements OnRefreshList
     private CustomProgressDialog customProgressDialog;
     private int currentpage=1;//当前页
     private List<OrderDTO> dataList=new ArrayList<>();
+    private SharedPreferencesUtil shareUtil;
     /**
      * 实例化
      * @param sectionNumber
@@ -77,7 +79,7 @@ public class CompleteOrderFragment extends BaseFragment implements OnRefreshList
 
     @Override
     protected void initData() {
-
+        shareUtil = SharedPreferencesUtil.getinstance(mContext);
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         refreshRecyclerView.init(manager,this,this);
@@ -86,8 +88,12 @@ public class CompleteOrderFragment extends BaseFragment implements OnRefreshList
 
 //        OrderAdapter adapter = new OrderAdapter(mContext, dataList);
 //        refreshRecyclerView.setAdapter(adapter);
-
-        getBookList();
+        if (shareUtil.getBoolean("IsLogin")) {
+            getBookList();
+        }else{
+            ll_no_data.setVisibility(View.VISIBLE);
+            refreshRecyclerView.setVisibility(View.GONE);
+        }
     }
 
     /**

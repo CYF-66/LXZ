@@ -1,7 +1,6 @@
 package com.xx.lxz.activity;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.app.TabActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,21 +9,17 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
-import android.widget.TextView;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
 import com.baidu.mobstat.StatService;
-import com.xx.lxz.App;
 import com.xx.lxz.BuildConfig;
 import com.xx.lxz.R;
 import com.xx.lxz.activity.home.HomeActivity;
-import com.xx.lxz.activity.my.LoginActivity;
 import com.xx.lxz.activity.my.MyActivity;
 import com.xx.lxz.activity.order.OrderActivity;
 import com.xx.lxz.bean.RefreshModel;
@@ -37,7 +32,6 @@ import com.xx.lxz.util.SharedPreferencesUtil;
 import com.xx.lxz.util.StatusBarUtil;
 import com.xx.lxz.util.ToastUtil;
 import com.xx.lxz.util.ToolUtils;
-import com.xx.lxz.widget.CustomDialog;
 import com.xx.lxz.widget.MyDialog;
 
 import org.simple.eventbus.EventBus;
@@ -58,7 +52,6 @@ public class MainActivity extends TabActivity{
     private TabHost tabHost;
     public static MainActivity mainActivity;
     private SharedPreferencesUtil shareUtil;
-    private Dialog mDialog;
     private UpdateManager mUpdateManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,15 +126,11 @@ public class MainActivity extends TabActivity{
                 ll_home.setSelected(true);
                 break;
             case R.id.ll_order:
-                if (!shareUtil.getBoolean("IsLogin")) {
-                    showDialog();
-                }else{
-                    ll_order.setSelected(false);
-                    ll_my.setSelected(false);
-                    ll_home.setSelected(false);
-                    tabHost.setCurrentTabByTag("order");
-                    ll_order.setSelected(true);
-                }
+                ll_order.setSelected(false);
+                ll_my.setSelected(false);
+                ll_home.setSelected(false);
+                tabHost.setCurrentTabByTag("order");
+                ll_order.setSelected(true);
 
                 break;
             case R.id.ll_my:
@@ -152,35 +141,6 @@ public class MainActivity extends TabActivity{
                 ll_my.setSelected(true);
                 break;
         }
-    }
-
-    /**
-     * 提醒登录
-     */
-    private void showDialog() {
-
-        View rootView = (View) LayoutInflater.from(mainActivity).inflate(R.layout.dialog_unlogin_remian, null);
-        TextView tv_login=(TextView)rootView.findViewById(R.id.tv_login);
-
-        tv_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-                Intent intent=new Intent(mainActivity, LoginActivity.class);
-                startActivity(intent);
-            }
-        });
-        if (mDialog == null) {
-            mDialog = new CustomDialog.Builder(mainActivity)
-                    .setNotitle(true)
-                    .setCancelable(true)
-                    .setContentView(rootView)
-                    .setBottomDialog(false)
-                    .setWidth(App.SCREEN_WIDTH-App.SCREEN_WIDTH/6)
-                    .setHeight(App.SCREEN_HEIGHT-App.SCREEN_HEIGHT/2)
-                    .create();
-        }
-        mDialog.show();
     }
 
     /**

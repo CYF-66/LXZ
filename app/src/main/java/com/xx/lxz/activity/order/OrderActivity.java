@@ -1,15 +1,21 @@
 package com.xx.lxz.activity.order;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.xx.lxz.App;
 import com.xx.lxz.R;
 import com.xx.lxz.activity.my.CusSerActivity;
+import com.xx.lxz.activity.my.LoginActivity;
 import com.xx.lxz.adapter.OrderViewPagerAdapter;
 import com.xx.lxz.base.BaseActivity;
 import com.xx.lxz.base.BaseFragment;
@@ -19,7 +25,9 @@ import com.xx.lxz.fragment.CheckOrderFragment;
 import com.xx.lxz.fragment.CompleteOrderFragment;
 import com.xx.lxz.fragment.ToBePayOrderFragment;
 import com.xx.lxz.util.LogUtil;
+import com.xx.lxz.util.SharedPreferencesUtil;
 import com.xx.lxz.util.StringUtil;
+import com.xx.lxz.widget.CustomDialog;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -37,10 +45,18 @@ public class OrderActivity extends BaseActivity implements TabLayout.OnTabSelect
     LinearLayout ll_top;
     @BindView(R.id.iv_kefu)
     ImageView iv_kefu;
+    @BindView(R.id.rl_unlogin)
+    RelativeLayout rl_unlogin;
+    @BindView(R.id.ll_login)
+    LinearLayout ll_login;
+    @BindView(R.id.tv_login)
+    TextView tv_login;
 
     public static OrderActivity activity;
     private BaseFragment[] fragmentsOrder;
     private OrderViewPagerAdapter viewPagerOrderAdapter;
+    private SharedPreferencesUtil shareUtil;
+    private Dialog mDialog;
     private String[] ordertTitles={GlobalConfig.CATEGORY_NAME_COMPLETE,GlobalConfig.CATEGORY_NAME_NOTPAY,GlobalConfig.CATEGORY_NAME_CHECK} ;
 
     @Override
@@ -49,12 +65,24 @@ public class OrderActivity extends BaseActivity implements TabLayout.OnTabSelect
         setContentView(R.layout.activity_order);
         ButterKnife.bind(this);
         activity=OrderActivity.this;
-        //订单
-        setTab();
-        iv_kefu.setOnClickListener(new View.OnClickListener() {
+        shareUtil = SharedPreferencesUtil.getinstance(activity);
+        if (!shareUtil.getBoolean("IsLogin")) {
+        }else{
+            //订单
+            setTab();
+            iv_kefu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(activity, CusSerActivity.class));
+                }
+            });
+        }
+
+        tv_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(activity, CusSerActivity.class));
+                Intent intent=new Intent(activity, LoginActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -79,6 +107,35 @@ public class OrderActivity extends BaseActivity implements TabLayout.OnTabSelect
         view_pager.setOffscreenPageLimit(1);
 
         StringUtil.reflex(tab_layout);
+    }
+
+    /**
+     * 提醒登录
+     */
+    private void showDialog() {
+
+        View rootView = (View) LayoutInflater.from(activity).inflate(R.layout.dialog_unlogin_remian, null);
+        TextView tv_login=(TextView)rootView.findViewById(R.id.tv_login);
+
+        tv_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+                Intent intent=new Intent(activity, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+        if (mDialog == null) {
+            mDialog = new CustomDialog.Builder(activity)
+                    .setNotitle(true)
+                    .setCancelable(true)
+                    .setContentView(rootView)
+                    .setBottomDialog(false)
+                    .setWidth(App.SCREEN_WIDTH-App.SCREEN_WIDTH/6)
+                    .setHeight(App.SCREEN_HEIGHT-App.SCREEN_HEIGHT/2)
+                    .create();
+        }
+        mDialog.show();
     }
 
     @Override
@@ -130,6 +187,18 @@ public class OrderActivity extends BaseActivity implements TabLayout.OnTabSelect
                     view_pager.setCurrentItem(2);
                 }
             }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!shareUtil.getBoolean("IsLogin")) {
+            rl_unlogin.setVisibility(View.VISIBLE);
+            ll_login.setVisibility(View.GONE);
+        }else{
+            rl_unlogin.setVisibility(View.GONE);
+            ll_login.setVisibility(View.VISIBLE);
         }
     }
 }
