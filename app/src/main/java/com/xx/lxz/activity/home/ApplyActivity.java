@@ -162,6 +162,7 @@ public class ApplyActivity extends BaseActivity {
 
     public void ck(View v) {
         Intent intent = null;
+        String cid;
         switch (v.getId()) {
             case R.id.iv_back://返回
                 finish();
@@ -171,16 +172,18 @@ public class ApplyActivity extends BaseActivity {
                 startActivityForResult(intent,1);
                 break;
             case R.id.tv_query://征信查询协议
-                String cid=shareUtil.getString("cid");
+                cid=shareUtil.getString("cid");
                 intent=new Intent(this,WebViewActivity.class);
                 intent.putExtra("title","征信查询授权书");
                 intent.putExtra("url","https://91xiaoxiangzu.com/xxzapp/proxy.html?cid"+cid);
                 startActivity(intent);
                 break;
             case R.id.tv_rent://产品租赁服务协议
+                cid=shareUtil.getString("cid");
                 intent=new Intent(this,WebViewActivity.class);
-                intent.putExtra("title","笑享租租赁协议");
-                intent.putExtra("url","https://91xiaoxiangzu.com/xxzapp/contract.html");
+                intent.putExtra("title","产品租赁服务协议");
+                String url="https://91xiaoxiangzu.com/xxzapp/contract.html?cid="+cid+"&pid="+product_id+"&sku_id="+sku_id+"&type="+type+"&msg_id="+msgid;
+                intent.putExtra("url",url);
                 startActivity(intent);
                 break;
             case R.id.tv_repay://还款管理协议

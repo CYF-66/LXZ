@@ -3,9 +3,14 @@ package com.xx.lxz.activity.my;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -129,24 +134,25 @@ public class LoginActivity extends BaseActivity {
                     return;
                 }
 
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//检查是否需要权限
-//                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-//                        //增加获取设备信息权限
-//                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 0);//申请访问设备信息权限
-//                    } else {//已获取权限
-//                        //TODO
-//
-//                        login(yzmToken,yzmCode,phoneNum,PublicParams.channelId,NetUtil.getDeviceId(mActivity));
-//                    }
-//                }else{
-//
-//                }
-                checkPermission(new CheckPermListener() {
-                    @Override
-                    public void agreeAllPermission() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//检查是否需要权限
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                        //增加获取设备信息权限
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 0);//申请访问设备信息权限
+                    } else {//已获取权限
+                        //TODO
+
                         login(yzmToken,yzmCode,phoneNum,PublicParams.channelId,NetUtil.getDeviceId(mActivity));
                     }
-                }, "需要读取设备信息权限", Manifest.permission.READ_PHONE_STATE);
+                }else{
+                    login(yzmToken,yzmCode,phoneNum,PublicParams.channelId,NetUtil.getDeviceId(mActivity));
+                }
+
+//                checkPermission(new CheckPermListener() {
+//                    @Override
+//                    public void agreeAllPermission() {
+//                        login(yzmToken,yzmCode,phoneNum,PublicParams.channelId,NetUtil.getDeviceId(mActivity));
+//                    }
+//                }, "需要读取设备信息权限", Manifest.permission.READ_PHONE_STATE);
                 break;
             case R.id.tv_register://注册
 //                et_phone.setText("");
@@ -333,4 +339,26 @@ public class LoginActivity extends BaseActivity {
 
         }
     };
+
+    /**
+     * 权限回调
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 0:
+                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    //TODO
+                    login(yzmToken,et_check_num.getText().toString().trim(),et_phone.getText().toString().trim(),PublicParams.channelId,NetUtil.getDeviceId(mActivity));
+                }else{
+                    ToastUtil.ToastShort(mActivity,"没有访问设备信息权限，请前去设置中开启权限");
+                }
+                break;
+            default:
+                break;
+        }
+    }
 }

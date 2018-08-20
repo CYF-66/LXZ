@@ -82,6 +82,7 @@ public class OrderAdapter extends RecyclerView.Adapter {
 //            holder.tvClassName.setText(mContent.get(position).className);
             ((ContentViewHolder) holder).ll_pay_record.setTag(position);
             ((ContentViewHolder) holder).tv_pay_ime.setTag(position);
+            ((ContentViewHolder) holder).btn_payoff.setTag(position);
             ((ContentViewHolder) holder).tv_phone_type.setText(mContent.get(position).getContentDates().getProduct_name());
             ((ContentViewHolder) holder).tv_zu_date.setText(mContent.get(position).getContentDates().getStart_date());
             ((ContentViewHolder) holder).tv_current_rent_money.setText(mContent.get(position).getContentDates().getRepaytotal());
