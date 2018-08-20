@@ -129,10 +129,10 @@ public class LoginActivity extends BaseActivity {
                     return;
                 }
 
-                if(PublicParams.channelId.equals("")){
-                    ToastUtil.ToastShort(mActivity, "百度推送绑定失败");
-                    return;
-                }
+//                if(PublicParams.channelId.equals("")){
+//                    ToastUtil.ToastShort(mActivity, "百度推送绑定失败");
+//                    return;
+//                }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//检查是否需要权限
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
