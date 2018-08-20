@@ -64,7 +64,7 @@
             android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="我有，你也有"
+            android:text="你有 我也有"
             android:textSize="14sp"
             android:textColor="@color/shen_gray"/>
     </LinearLayout>

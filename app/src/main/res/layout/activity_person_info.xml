@@ -256,6 +256,7 @@
                 android:layout_height="1dp"
                 android:background="@color/qian_gray"/>
             <LinearLayout
+                android:id="@+id/ll_address"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:paddingLeft="10dp"
@@ -282,6 +283,32 @@
                     android:gravity="right"
                     android:textCursorDrawable="@drawable/editcursor"
                     />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ll_school_start"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/title_text"
+                    android:singleLine="true"
+                    android:text="入校时间"/>
+                <TextView
+                    android:id="@+id/tv_school_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/title_text"
+                    android:text=""/>
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@mipmap/arrow_right"/>
             </LinearLayout>
             <View
                 android:layout_width="match_parent"

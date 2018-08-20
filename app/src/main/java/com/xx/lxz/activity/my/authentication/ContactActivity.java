@@ -213,7 +213,7 @@ public class ContactActivity extends BaseActivity {
                     return;
                 }
                 if(TextUtils.isEmpty(relative1Address)){
-                    ToastUtil.ToastShort(mActivity,"亲属1姓名不能为空");
+                    ToastUtil.ToastShort(mActivity,"亲属1地址不能为空");
                     return;
                 }
                 if(TextUtils.isEmpty(relative2Name)){
@@ -233,7 +233,7 @@ public class ContactActivity extends BaseActivity {
                     return;
                 }
                 if(TextUtils.isEmpty(relative2Address)){
-                    ToastUtil.ToastShort(mActivity,"亲属2姓名不能为空");
+                    ToastUtil.ToastShort(mActivity,"亲属2地址不能为空");
                     return;
                 }
 
@@ -257,6 +257,10 @@ public class ContactActivity extends BaseActivity {
         }else{
             dates.add(new TargetEntity("配偶","spouse"));
             dates.add(new TargetEntity("亲戚","relative"));
+            dates.add(new TargetEntity("父亲","father"));
+            dates.add(new TargetEntity("母亲","mother"));
+            dates.add(new TargetEntity("儿子","son"));
+            dates.add(new TargetEntity("女儿","daughter"));
         }
         RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(mActivity).inflate(R.layout.layout_bottom_recyclerview, null);
         recyclerView.setHasFixedSize(true);

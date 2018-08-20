@@ -86,16 +86,19 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.my.authentication.IdentifyActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.my.authentication.PersonInfoActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.my.CusSerActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.my.authentication.ContactActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.my.authentication.AlipayAuthenActivity"
             android:screenOrientation="portrait" />
@@ -128,7 +131,9 @@
         <activity android:name=".activity.home.ProductDetailsActivity" />
         <activity android:name=".activity.my.authentication.OperatorAuthenActivity" />
         <activity android:name=".activity.my.authentication.XueXinAuthenActivity" />
-        <activity android:name=".activity.my.authentication.CommonContactActivity" />
+        <activity android:name=".activity.my.authentication.CommonContactActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".activity.my.MessageActivity" />
 
         <!-- push富媒体，使用富媒体推送必须声明 -->

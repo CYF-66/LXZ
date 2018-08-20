@@ -10,8 +10,70 @@
     <include
         layout="@layout/layout_head" />
 
-    <ImageView
+    <LinearLayout
+        android:layout_marginTop="45dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@mipmap/img_order_success"/>
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitXY"
+            android:background="@mipmap/img_state_select"/>
+        <View
+            android:layout_width="100dp"
+            android:layout_height="3dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/shen_gray"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:layout_gravity="center_vertical"
+            android:background="@mipmap/img_state_unselect"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="审核中"
+            android:textColor="@color/bt_bg"
+            android:textSize="16sp"
+            />
+        <View
+            android:layout_width="100dp"
+            android:layout_height="3dp"
+            android:visibility="invisible"
+            android:layout_gravity="center_vertical"
+            android:background="@color/shen_gray"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="顺丰发货"
+            android:textColor="@color/shen_gray"
+            android:textSize="16sp"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="45dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="订单已成功提交，工作人员将在30分钟内完成审核，待审核通过之后，手机将会通过顺丰寄出，请您耐心等待。"
+        android:textColor="@color/title_text"
+        android:textSize="16sp"
+        />
+
 </LinearLayout>

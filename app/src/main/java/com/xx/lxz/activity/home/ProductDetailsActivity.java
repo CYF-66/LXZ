@@ -471,11 +471,11 @@ public class ProductDetailsActivity extends BaseActivity implements OnRefreshLis
                             case 5://运营商认证
                                 startActivity(new Intent(mActivity, OperatorAuthenActivity.class));
                                 break;
-                            case 6://支付宝认证
-                                startActivity(new Intent(mActivity, AlipayAuthenActivity.class));
-                                break;
-                            case 7://淘宝认证
+                            case 6://淘宝认证
                                 startActivity(new Intent(mActivity, TBAuthenActivity.class));
+                                break;
+                            case 7://支付宝认证
+                                startActivity(new Intent(mActivity, AlipayAuthenActivity.class));
                                 break;
                             case 8://学信网认证
                                 startActivity(new Intent(mActivity, XueXinAuthenActivity.class));

@@ -153,7 +153,8 @@ public class XueXinAuthenActivity extends BaseActivity implements OnLoginResultL
 
     @Override
     public void onLoginFailure(String resultCode, String resultDesc, int serviceId) {
-        Toast.makeText(this, resultCode +" ,resultDesc=" + resultDesc +",  serviceId=" + serviceId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "取消认证", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, resultCode +" ,resultDesc=" + resultDesc +",  serviceId=" + serviceId, Toast.LENGTH_SHORT).show();
         System.out.println("onLoginFailure resultCode=" + resultCode +" ,resultDesc=" + resultDesc +",  serviceId=" + serviceId);
     }
 

@@ -35,7 +35,7 @@ public class TakeOrderSuccessActivity extends BaseActivity {
         tv_title.setText("申请成功");
     }
 
-    @OnClick({R.id.iv_back,R.id.btn_complete})
+    @OnClick({R.id.iv_back})
 
     public void onClick(View v) {
         Intent intent = null;

@@ -34,6 +34,7 @@ import com.xx.lxz.bean.Common;
 import com.xx.lxz.bean.PerInfoBean;
 import com.xx.lxz.bean.StepMode;
 import com.xx.lxz.bean.TargetEntity;
+import com.xx.lxz.util.KeyBoardUtils;
 import com.xx.lxz.util.NetUtil;
 import com.xx.lxz.util.PhotoUtils;
 import com.xx.lxz.util.SharedPreferencesUtil;
@@ -79,6 +80,10 @@ public class PersonInfoActivity extends BaseActivity {
     LinearLayout ll_sex;//性别
     @BindView(R.id.ll_birth_date)
     LinearLayout ll_birth_date;//出生年月
+    @BindView(R.id.ll_school_start)
+    LinearLayout ll_school_start;//入校时间
+    @BindView(R.id.ll_address)
+    LinearLayout ll_address;//公司地址
     @BindView(R.id.ll_media)
     LinearLayout ll_media;//芝麻信用视频
     @BindView(R.id.rl_idcard_front)
@@ -110,6 +115,8 @@ public class PersonInfoActivity extends BaseActivity {
 
     @BindView(R.id.tv_birth_date)
     TextView tv_birth_date;//出生年月
+    @BindView(R.id.tv_school_start)
+    TextView tv_school_start;//入校时间
     @BindView(R.id.tv_sex)
     TextView tv_sex;//性别
     @BindView(R.id.tv_media_path)
@@ -128,7 +135,8 @@ public class PersonInfoActivity extends BaseActivity {
 
     private Activity mActivity;
     private boolean isStudent = true;
-    private Dialog mDialog;
+    private Dialog mDialogSex;
+    private Dialog mDialogPhoto;
     private List<TargetEntity> dates = new ArrayList<>();
     private CustomProgressDialog customProgressDialog;
     private String path;
@@ -139,9 +147,10 @@ public class PersonInfoActivity extends BaseActivity {
     private File vedio;
 
     private SharedPreferencesUtil shareUtil;
-    private boolean isEdit=true;
+    private boolean isEdit = true;
     private ArrayList<String> selectedPictures = new ArrayList<>();
-    private boolean isEmpty=true;
+    private boolean isEmpty = true;
+    private String comeFrom = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +169,8 @@ public class PersonInfoActivity extends BaseActivity {
         PSGlideUtil.loadImage(mActivity, R.mipmap.tab_seclect, iv_yes);
         PSGlideUtil.loadImage(mActivity, R.mipmap.tab_unseclect, iv_no);
         rl_idcard_front.setVisibility(View.GONE);
+        ll_school_start.setVisibility(View.VISIBLE);
+        ll_address.setVisibility(View.GONE);
 //        List<String> steps = Arrays.asList(new String[]{"身份认证","信息认证","","","",""});
         List<StepMode> stepModes = new ArrayList<>();
 
@@ -194,7 +205,7 @@ public class PersonInfoActivity extends BaseActivity {
         getPersonInfo();
     }
 
-    @OnClick({R.id.iv_back, R.id.btn_save, R.id.iv_yes, R.id.iv_no, R.id.ll_birth_date, R.id.ll_sex,R.id.ll_media,R.id.iv_front,R.id.iv_work_pic})
+    @OnClick({R.id.iv_back, R.id.btn_save, R.id.iv_yes, R.id.iv_no, R.id.ll_birth_date, R.id.ll_sex, R.id.ll_media, R.id.iv_front, R.id.iv_work_pic, R.id.ll_school_start})
 
     public void onClick(View v) {
         Intent intent = null;
@@ -203,13 +214,15 @@ public class PersonInfoActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.iv_yes://
-                if(isEdit){
+                if (isEdit) {
                     isStudent = true;
                     PSGlideUtil.loadImage(mActivity, R.mipmap.tab_seclect, iv_yes);
                     PSGlideUtil.loadImage(mActivity, R.mipmap.tab_unseclect, iv_no);
                     rl_idcard_front.setVisibility(View.GONE);
                     iv_work_pic.setVisibility(View.GONE);
-                    tv_bian1.setText("入校时间");
+                    ll_school_start.setVisibility(View.VISIBLE);
+                    ll_address.setVisibility(View.GONE);
+
                     tv_bian2.setText("所属院校");
                     tv_bian3.setText("学生证编号");
                     et_company_address.setText("");
@@ -218,12 +231,14 @@ public class PersonInfoActivity extends BaseActivity {
                 }
                 break;
             case R.id.iv_no://返回
-                if(isEdit){
+                if (isEdit) {
                     isStudent = false;
                     PSGlideUtil.loadImage(mActivity, R.mipmap.tab_unseclect, iv_yes);
                     PSGlideUtil.loadImage(mActivity, R.mipmap.tab_seclect, iv_no);
                     rl_idcard_front.setVisibility(View.VISIBLE);
                     iv_work_pic.setVisibility(View.VISIBLE);
+                    ll_school_start.setVisibility(View.GONE);
+                    ll_address.setVisibility(View.VISIBLE);
                     tv_bian1.setText("公司地址");
                     tv_bian2.setText("月收入");
                     tv_bian3.setText("月消费");
@@ -233,29 +248,38 @@ public class PersonInfoActivity extends BaseActivity {
                 }
                 break;
             case R.id.ll_birth_date://出生年月
-                if(isEdit){
+                if (isEdit) {
+                    comeFrom = "birthday";
+                    KeyBoardUtils.hideKeyboard(mActivity);
+                    selectDate();
+                }
+                break;
+            case R.id.ll_school_start://入校时间
+                if (isEdit) {
+                    comeFrom = "school";
+                    KeyBoardUtils.hideKeyboard(mActivity);
                     selectDate();
                 }
                 break;
             case R.id.ll_sex://性别
-                if(isEdit){
+                if (isEdit) {
                     showDialog();
                 }
                 break;
-            case R.id.iv_front://选择
+            case R.id.iv_front://工作证
 //                showDialog();
-                if(isEdit){
+                if (isEdit) {
                     showPicDialog();
                 }
                 break;
-            case R.id.iv_work_pic://性别
+            case R.id.iv_work_pic://工作证
 //                showDialog();
-                if(isEdit){
+                if (isEdit) {
                     showPicDialog();
                 }
                 break;
             case R.id.ll_media://选取文件
-                if(isEdit){
+                if (isEdit) {
                     intent = new Intent();
                     intent.setType("video/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -266,129 +290,134 @@ public class PersonInfoActivity extends BaseActivity {
                 break;
             case R.id.btn_save://保存
 
-                String sex=tv_sex.getText().toString();
-                String mingzu=et_mingz.getText().toString();
-                String birthday=tv_birth_date.getText().toString();
+                String sex = tv_sex.getText().toString();
+                String mingzu = et_mingz.getText().toString();
+                String birthday = tv_birth_date.getText().toString();
 
-                String jiguan=et_jiguan.getText().toString();
-                String huji=et_huji.getText().toString();
-                String curAddr=et_cur_addr.getText().toString();
+                String jiguan = et_jiguan.getText().toString();
+                String huji = et_huji.getText().toString();
+                String curAddr = et_cur_addr.getText().toString();
 
-                String bian1=et_company_address.getText().toString();
-                String bian2=et_work.getText().toString();
-                String bian3=et_money_earn.getText().toString();
+                String bian1 = et_company_address.getText().toString();
+                String bian2 = et_work.getText().toString();
+                String bian3 = et_money_earn.getText().toString();
+                String school_start = tv_school_start.getText().toString();
 
-                String bankId=et_bank_id.getText().toString();
-                String bankFench=et_bank_account.getText().toString();
+                String bankId = et_bank_id.getText().toString();
+                String bankFench = et_bank_account.getText().toString();
 
-                String video=tv_media_path.getText().toString();
+                String video = tv_media_path.getText().toString();
 
-                if(TextUtils.isEmpty(sex)){
-                    ToastUtil.ToastShort(mActivity,"性别不能为空");
+                if (TextUtils.isEmpty(sex)) {
+                    ToastUtil.ToastShort(mActivity, "性别不能为空");
                     return;
                 }
-                if(TextUtils.isEmpty(mingzu)){
-                    ToastUtil.ToastShort(mActivity,"名族不能为空");
+                if (TextUtils.isEmpty(mingzu)) {
+                    ToastUtil.ToastShort(mActivity, "名族不能为空");
                     return;
                 }
-                if(TextUtils.isEmpty(birthday)){
-                    ToastUtil.ToastShort(mActivity,"出生年月不能为空");
+                if (TextUtils.isEmpty(birthday)) {
+                    ToastUtil.ToastShort(mActivity, "出生年月不能为空");
                     return;
                 }
-                if(TextUtils.isEmpty(jiguan)){
-                    ToastUtil.ToastShort(mActivity,"籍贯不能为空");
+                if (TextUtils.isEmpty(jiguan)) {
+                    ToastUtil.ToastShort(mActivity, "籍贯不能为空");
                     return;
                 }
-                if(TextUtils.isEmpty(huji)){
-                    ToastUtil.ToastShort(mActivity,"户籍不能为空");
+                if (TextUtils.isEmpty(huji)) {
+                    ToastUtil.ToastShort(mActivity, "户籍不能为空");
                     return;
                 }
-                if(TextUtils.isEmpty(curAddr)){
-                    ToastUtil.ToastShort(mActivity,"居住地址不能为空");
+                if (TextUtils.isEmpty(curAddr)) {
+                    ToastUtil.ToastShort(mActivity, "居住地址不能为空");
                     return;
                 }
-                if(TextUtils.isEmpty(bian1)){
-                    if(isStudent){
-                        ToastUtil.ToastShort(mActivity,"入校时间不能为空");
-                    }else{
-                        ToastUtil.ToastShort(mActivity,"公司地址不能为空");
+                if (isStudent) {
+                    if (TextUtils.isEmpty(school_start)) {
+                        ToastUtil.ToastShort(mActivity, "入校时间不能为空");
+                        return;
                     }
-
-                    return;
-                }
-                if(TextUtils.isEmpty(bian2)){
-                    if(isStudent){
-                        ToastUtil.ToastShort(mActivity,"所属院校不能为空");
-                    }else{
-                        ToastUtil.ToastShort(mActivity,"工作证不能为空");
+                } else {
+                    if (TextUtils.isEmpty(bian1)) {
+                        ToastUtil.ToastShort(mActivity, "公司地址不能为空");
+                        return;
                     }
-                    return;
                 }
-                if(TextUtils.isEmpty(bian3)){
-                    ToastUtil.ToastShort(mActivity,"性别不能为空");if(isStudent){
-                        ToastUtil.ToastShort(mActivity,"学生证编号不能为空");
-                    }else{
-                        ToastUtil.ToastShort(mActivity,"月收入/月消费不能为空");
+
+                if (TextUtils.isEmpty(bian2)) {
+                    if (isStudent) {
+                        ToastUtil.ToastShort(mActivity, "所属院校不能为空");
+                    } else {
+                        ToastUtil.ToastShort(mActivity, "工作证不能为空");
                     }
                     return;
                 }
-
-                if(TextUtils.isEmpty(bankId)){
-                    ToastUtil.ToastShort(mActivity,"银行卡卡号不能为空");
-                    return;
-                }
-                if(TextUtils.isEmpty(bankFench)){
-                    ToastUtil.ToastShort(mActivity,"银行卡开户行不能为空");
-                    return;
-                }
-                if(TextUtils.isEmpty(video)){
-                    ToastUtil.ToastShort(mActivity,"芝麻信用视频不能为空");
+                if (TextUtils.isEmpty(bian3)) {
+                    ToastUtil.ToastShort(mActivity, "性别不能为空");
+                    if (isStudent) {
+                        ToastUtil.ToastShort(mActivity, "学生证编号不能为空");
+                    } else {
+                        ToastUtil.ToastShort(mActivity, "月收入/月消费不能为空");
+                    }
                     return;
                 }
 
-                Map<String ,Object> objectList=new HashMap<>();
-                if(isStudent){
-                    objectList.put("type","2");//学生
-                    objectList.put("school",bian2);//在读学校
-                    objectList.put("indatestring",bian1);//入校时间
-                    objectList.put("studentcard",bian3);//学生证编号
-                }else{
-                    objectList.put("type","1");//成人
-                    objectList.put("company",bian1);//公司地址
-                    objectList.put("income",bian2);//月收入
-                    objectList.put("consume",bian3);//月消费
-                    if(fileCropUri!=null){
-                        if(!fileCropUri.exists()){
-                            ToastUtil.ToastShort(mActivity,"请上传工作证照");
+                if (TextUtils.isEmpty(bankId)) {
+                    ToastUtil.ToastShort(mActivity, "银行卡卡号不能为空");
+                    return;
+                }
+                if (TextUtils.isEmpty(bankFench)) {
+                    ToastUtil.ToastShort(mActivity, "银行卡开户行不能为空");
+                    return;
+                }
+                if (TextUtils.isEmpty(video)) {
+                    ToastUtil.ToastShort(mActivity, "芝麻信用视频不能为空");
+                    return;
+                }
+
+                Map<String, Object> objectList = new HashMap<>();
+                if (isStudent) {
+                    objectList.put("type", "2");//学生
+                    objectList.put("school", bian2);//在读学校
+                    objectList.put("indatestring", school_start);//入校时间
+                    objectList.put("studentcard", bian3);//学生证编号
+                } else {
+                    objectList.put("type", "1");//成人
+                    objectList.put("company", bian1);//公司地址
+                    objectList.put("income", bian2);//月收入
+                    objectList.put("consume", bian3);//月消费
+                    if (fileCropUri != null) {
+                        if (!fileCropUri.exists()) {
+                            ToastUtil.ToastShort(mActivity, "请上传工作证照");
                             return;
-                        }else{
-                            objectList.put("workcardFile",fileCropUri);
+                        } else {
+                            objectList.put("workcardFile", fileCropUri);
                         }
-                    }else{
-                        ToastUtil.ToastShort(mActivity,"请上传工作证照");
+                    } else {
+                        ToastUtil.ToastShort(mActivity, "请上传工作证照");
                         return;
                     }
 
                 }
 //                objectList.put("name","陈银飞");
-                objectList.put("sex",sex);
-                objectList.put("ethnic",mingzu);
-                objectList.put("birthday",birthday);
-                objectList.put("nativeplace",jiguan);
-                objectList.put("koseki",huji);
-                objectList.put("nowaddress",curAddr);
-                objectList.put("bankcard",bankId);
-                objectList.put("bankaddress",bankFench);
-                if(isEmpty){
-                    if(vedio!=null){
-                        if(!vedio.exists()){
-                            ToastUtil.ToastShort(mActivity,"请上传芝麻信用视频");
+                objectList.put("sex", sex);
+                objectList.put("ethnic", mingzu);
+                objectList.put("birthday", birthday);
+                objectList.put("nativeplace", jiguan);
+                objectList.put("koseki", huji);
+                objectList.put("nowaddress", curAddr);
+                objectList.put("bankcard", bankId);
+                objectList.put("bankaddress", bankFench);
+                if (isEmpty) {
+                    if (vedio != null) {
+                        if (!vedio.exists()) {
+                            ToastUtil.ToastShort(mActivity, "请上传芝麻信用视频");
                             return;
-                        }else{
-                            objectList.put("zhimfvideoFile",vedio);
+                        } else {
+                            objectList.put("zhimfvideoFile", vedio);
                         }
-                    }else{
-                        ToastUtil.ToastShort(mActivity,"请上传芝麻信用视频");
+                    } else {
+                        ToastUtil.ToastShort(mActivity, "请上传芝麻信用视频");
                         return;
                     }
                 }
@@ -426,7 +455,7 @@ public class PersonInfoActivity extends BaseActivity {
     /**
      * 请求服务器  保存个人信息
      */
-    public void submitMsg(final Map<String ,Object> objectList) {
+    public void submitMsg(final Map<String, Object> objectList) {
         if (!NetUtil.checkNet(mActivity)) {
             ToastUtil.ToastShort(mActivity, "网络异常");
         } else {
@@ -437,7 +466,7 @@ public class PersonInfoActivity extends BaseActivity {
                     super.run();
                     try {
 
-                        String result= HttpService.httpClientUploadFile(mActivity, HttpConstant.CUSTOMINFO,objectList);
+                        String result = HttpService.httpClientUploadFile(mActivity, HttpConstant.CUSTOMINFO, objectList);
 
                         Message msg = handler.obtainMessage();
                         msg.what = MessageCode.SAVECURINFO;
@@ -490,12 +519,12 @@ public class PersonInfoActivity extends BaseActivity {
                 adapter.notifyDataSetChanged();
 
                 tv_sex.setText(dates.get(position).getText());
-                mDialog.dismiss();
+                mDialogSex.dismiss();
             }
         });
 
-        if (mDialog == null) {
-            mDialog = new CustomDialog.Builder(mActivity)
+        if (mDialogSex == null) {
+            mDialogSex = new CustomDialog.Builder(mActivity)
                     .setNotitle(true)
                     .setCancelable(true)
                     .setContentView(recyclerView)
@@ -503,16 +532,16 @@ public class PersonInfoActivity extends BaseActivity {
                     .setWidth(App.SCREEN_WIDTH)
                     .create();
         }
-        mDialog.show();
+        mDialogSex.show();
     }
 
-    private void showPicDialog(){
+    private void showPicDialog() {
 
-        if(dates.size()>1){
+        if (dates.size() > 1) {
             dates.clear();
         }
-        dates.add(new TargetEntity("相册","fromImg"));
-        dates.add(new TargetEntity("拍照","takePhoto"));
+        dates.add(new TargetEntity("相册", "fromImg"));
+        dates.add(new TargetEntity("拍照", "takePhoto"));
         RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(mActivity).inflate(R.layout.layout_bottom_recyclerview, null);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -537,17 +566,17 @@ public class PersonInfoActivity extends BaseActivity {
                 dates.get(position).setSelected(true);
                 adapter.notifyDataSetChanged();
 
-                if(dates.get(position).getText().equals("拍照")){
+                if (dates.get(position).getText().equals("拍照")) {
                     takePhoto();
-                }else{
+                } else {
                     selectPicture();
                 }
-                mDialog.dismiss();
+                mDialogPhoto.dismiss();
             }
         });
 
-        if (mDialog == null) {
-            mDialog = new CustomDialog.Builder(mActivity)
+        if (mDialogPhoto == null) {
+            mDialogPhoto = new CustomDialog.Builder(mActivity)
                     .setNotitle(true)
                     .setCancelable(true)
                     .setContentView(recyclerView)
@@ -555,7 +584,7 @@ public class PersonInfoActivity extends BaseActivity {
                     .setWidth(App.SCREEN_WIDTH)
                     .create();
         }
-        mDialog.show();
+        mDialogPhoto.show();
     }
 
     private void selectPicture() {
@@ -579,6 +608,7 @@ public class PersonInfoActivity extends BaseActivity {
 
     /**
      * 拍照或从相册获取回调
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -591,8 +621,8 @@ public class PersonInfoActivity extends BaseActivity {
             switch (requestCode) {
                 case CODE_VEDIO_REQUEST:
                     try {
-                        path=PhotoUtils.getPath(this, data.getData());
-                        path=path.replace("file:///","");
+                        path = PhotoUtils.getPath(this, data.getData());
+                        path = path.replace("file:///", "");
 //                        Uri url=data.getData();
 //                        LogUtil.d("TEST","path="+path);
                         vedio = new File(path);
@@ -603,17 +633,17 @@ public class PersonInfoActivity extends BaseActivity {
 //                            break;
                         }
                         if (vedio.length() > 100 * 1024 * 1024) {
-                            ToastUtil.ToastShort(mActivity,"文件大于100M");
+                            ToastUtil.ToastShort(mActivity, "文件大于100M");
                             break;
                         }
 
-                        if(path.contains("/")){
-                            String[] str=path.split("/");
-                            tv_media_path.setText(str[str.length-1]);
-                        }else{
+                        if (path.contains("/")) {
+                            String[] str = path.split("/");
+                            tv_media_path.setText(str[str.length - 1]);
+                        } else {
                             tv_media_path.setText(path);
                         }
-                        isEmpty=false;
+                        isEmpty = true;
                         //传换文件流，上传
 //                        submitVedio();
                     } catch (Exception e) {
@@ -629,7 +659,7 @@ public class PersonInfoActivity extends BaseActivity {
                         iv_work_pic.setVisibility(View.VISIBLE);
                         PSGlideUtil.loadImage(mActivity, backPics.get(0), iv_work_pic);
 //                        saveCusHeadImg(new File(backPics.get(0)));
-                        fileCropUri=new File(backPics.get(0));
+                        fileCropUri = new File(backPics.get(0));
                     }
                     break;
                 default:
@@ -655,7 +685,11 @@ public class PersonInfoActivity extends BaseActivity {
                 // TODO Auto-generated method stub
                 StringBuilder sb = new StringBuilder();
                 sb.append(year.substring(0, year.length() - 1)).append("-").append(month.substring(0, month.length() - 1)).append("-").append(day.substring(0, day.length() - 1));
-                tv_birth_date.setText(sb.toString());
+                if (comeFrom.equals("birthday")) {
+                    tv_birth_date.setText(sb.toString());
+                }else{
+                    tv_school_start.setText(sb.toString());
+                }
 
             }
         });
@@ -708,27 +742,29 @@ public class PersonInfoActivity extends BaseActivity {
             }
             switch (msg.what) {
                 case MessageCode.GETPERSONINFO:
-                    PerInfoBean common=new Gson().fromJson(result,
+                    PerInfoBean common = new Gson().fromJson(result,
                             PerInfoBean.class);
-                    if(common.getCode()==1){//进入到身份认证页面
-                        isEdit=true;
-                        et_mingz.setFocusable(false);
-                        et_mingz.setFocusableInTouchMode(false);
-                        if(common.getData().getType().equals("1")){//成人
+                    if (common.getCode() == 1) {//进入到身份认证页面
+                        isEdit = true;
+                        if (common.getData().getType().equals("1")) {//成人
                             tv_bian1.setText("公司地址");
                             tv_bian2.setText("月收入");
                             tv_bian3.setText("月消费");
                             et_company_address.setText(common.getData().getCompany());
                             et_work.setText(common.getData().getIncome());
                             et_money_earn.setText(common.getData().getConsume());
-                        }else{//学生
+                            ll_school_start.setVisibility(View.GONE);
+                            ll_address.setVisibility(View.VISIBLE);
+                        } else {//学生
                             tv_bian1.setText("入校时间");
                             tv_bian2.setText("所属院校");
                             tv_bian3.setText("学生证编号");
-                            et_company_address.setText(common.getData().getSchool());
-                            et_work.setText(common.getData().getIndatestring());
+//                            et_company_address.setText(common.getData().getSchool());
+                            et_work.setText(common.getData().getSchool());
                             et_money_earn.setText(common.getData().getStudentcard());
-
+                            tv_school_start.setText(common.getData().getIndatestring());
+//                            et_company_address.setText(common.getData().getSchool());
+                            et_money_earn.setText(common.getData().getStudentcard());
                         }
                         tv_sex.setText(common.getData().getSex());
                         et_mingz.setText(common.getData().getEthnic());
@@ -739,32 +775,36 @@ public class PersonInfoActivity extends BaseActivity {
                         et_bank_id.setText(common.getData().getBankcard());
                         et_bank_account.setText(common.getData().getBankaddress());
                         tv_media_path.setText(common.getData().getZhimfvideo());
-                        if(TextUtils.isEmpty(common.getData().getZhimfvideo())){
-                            isEmpty=true;
-                        }else{
-                            isEmpty=false;
-                            if(common.getData().getZhimfvideo().contains("/")){
-                                String[] str=common.getData().getZhimfvideo().split("/");
-                                tv_media_path.setText(str[str.length-1]);
-                            }else{
+                        if (TextUtils.isEmpty(common.getData().getZhimfvideo())) {
+                            isEmpty = true;
+                        } else {
+                            isEmpty = false;
+                            if (common.getData().getZhimfvideo().contains("/")) {
+                                String[] str = common.getData().getZhimfvideo().split("/");
+                                tv_media_path.setText(str[str.length - 1]);
+                            } else {
                                 tv_media_path.setText(path);
                             }
                         }
                         btn_save.setVisibility(View.VISIBLE);
-                    }else{//身份已认证，请不要重复认证
-                        isEdit=false;
-                        if(common.getData().getType().equals("1")){//成人
+                    } else {//身份已认证，请不要重复认证
+                        isEdit = false;
+                        if (common.getData().getType().equals("1")) {//成人
                             tv_bian1.setText("公司地址");
                             tv_bian2.setText("月收入");
                             tv_bian3.setText("月消费");
                             et_company_address.setText(common.getData().getCompany());
                             et_work.setText(common.getData().getIncome());
                             et_money_earn.setText(common.getData().getConsume());
-                        }else{//学生
-                            tv_bian1.setText("入校时间");
+                            ll_school_start.setVisibility(View.GONE);
+                            ll_address.setVisibility(View.VISIBLE);
+                        } else {//学生
                             tv_bian2.setText("所属院校");
                             tv_bian3.setText("学生证编号");
-                            et_company_address.setText(common.getData().getSchool());
+                            ll_school_start.setVisibility(View.VISIBLE);
+                            ll_address.setVisibility(View.GONE);
+                            tv_school_start.setText(common.getData().getSchool());
+//                            et_company_address.setText(common.getData().getSchool());
                             et_work.setText(common.getData().getIndatestring());
                             et_money_earn.setText(common.getData().getStudentcard());
 
@@ -779,14 +819,14 @@ public class PersonInfoActivity extends BaseActivity {
                         et_bank_id.setText(common.getData().getBankcard());
                         et_bank_account.setText(common.getData().getBankaddress());
                         tv_media_path.setText(common.getData().getZhimfvideo());
-                        if(TextUtils.isEmpty(common.getData().getZhimfvideo())){
-                            isEmpty=true;
-                        }else{
-                            isEmpty=false;
-                            if(common.getData().getZhimfvideo().contains("/")){
-                                String[] str=common.getData().getZhimfvideo().split("/");
-                                tv_media_path.setText(str[str.length-1]);
-                            }else{
+                        if (TextUtils.isEmpty(common.getData().getZhimfvideo())) {
+                            isEmpty = true;
+                        } else {
+                            isEmpty = false;
+                            if (common.getData().getZhimfvideo().contains("/")) {
+                                String[] str = common.getData().getZhimfvideo().split("/");
+                                tv_media_path.setText(str[str.length - 1]);
+                            } else {
                                 tv_media_path.setText(path);
                             }
                         }
@@ -818,15 +858,15 @@ public class PersonInfoActivity extends BaseActivity {
                     Common baseResult = new Gson().fromJson(result,
                             Common.class);
 
-                    if(baseResult.getCode()==1){
+                    if (baseResult.getCode() == 1) {
                         //保存头像地址
 //                        shareUtil.setString("UserIcon",baseResult.getData());
-                        int step=baseResult.getData().getStep();
-                        startActivity(new Intent(mActivity,ContactActivity.class));
+                        int step = baseResult.getData().getStep();
+                        startActivity(new Intent(mActivity, ContactActivity.class));
                         finish();
 
-                    }else{
-                        ToastUtil.ToastShort(mActivity,baseResult.getMessage());
+                    } else {
+                        ToastUtil.ToastShort(mActivity, baseResult.getMessage());
                     }
                     break;
             }
